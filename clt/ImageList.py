@@ -4,10 +4,12 @@ import re
 
 class ImageList(object):
     """Lists absorption and reference images in a directory"""
+
     def __init__(self, path_to_dir):
         self.changeDirectory(path_to_dir)
 
     def changeDirectory(self, path_to_new_dir):
+        """Updates files to reflect contents of new directory."""
         if path_to_new_dir is None:
             return
         else:
@@ -15,6 +17,10 @@ class ImageList(object):
             self.updateFileList()
 
     def updateFileList(self):
+        """Updates files to reflect contents of current directory.
+
+        Call this function whenever contents of current directory have
+        changed."""
 
         # list everything in path_to_dir but only add files which have .tif to
         # the list of files
