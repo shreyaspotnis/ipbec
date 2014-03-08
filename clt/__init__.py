@@ -1,1 +1,1 @@
-from ImageList import ImageList
+from ImageList import ImageList, ImageListError
