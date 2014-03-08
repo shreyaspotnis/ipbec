@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, uic
+from PyQt4 import uic
 from pyqtgraph.dockarea import DockArea, Dock
 from widgets import ImageView, ImageBrowser
 

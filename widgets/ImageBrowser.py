@@ -28,9 +28,9 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
     def handleOpenDirectoryAction(self):
         """Called when the user clicks the Open Directory button."""
         new_directory = str(QFileDialog.getExistingDirectory(self,
-                           "Open Directory",
-                           self.current_directory,
-                           QFileDialog.ShowDirsOnly))
+                            "Open Directory",
+                            self.current_directory,
+                            QFileDialog.ShowDirsOnly))
         print(new_directory)
         self.current_directory = new_directory
 
