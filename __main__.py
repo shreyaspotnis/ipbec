@@ -16,4 +16,5 @@ def main():
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
-    sys.exit(main())
+    main()
+    os._exit(0)
