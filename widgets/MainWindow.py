@@ -71,4 +71,5 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def closeEvent(self, event):
         self.saveSettings()
+        self.image_browser.saveSettings()
         super(MainWindow, self).closeEvent(event)
