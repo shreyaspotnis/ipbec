@@ -1,12 +1,15 @@
-from PyQt4 import QtGui
+from PyQt4 import QtGui, uic
+
+Ui_MainWindow, QMainWindow = uic.loadUiType("ui/MainWindow.ui")
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QMainWindow, Ui_MainWindow):
     """Where all the action happens."""
 
     def __init__(self, settings):
         super(MainWindow, self).__init__()
         self.settings = settings
+        self.setupUi(self)
         self.loadSettings()
 
     def loadSettings(self):
