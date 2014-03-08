@@ -12,7 +12,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__()
         self.settings = settings
         self.setupUi(self)
-        self.loadSettings()
 
         # MainWindow is a collection of widgets in their respective docks.
         # We make DockArea our central widget
@@ -20,6 +19,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setCentralWidget(self.dock_area)
 
         self.createDocks()
+        self.loadSettings()
 
     def createDocks(self):
         """Create all dock widgets and add them to DockArea."""
@@ -39,6 +39,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.settings.beginGroup('mainwindow')
         geometry = self.settings.value('geometry').toByteArray()
         state = self.settings.value('windowstate').toByteArray()
+        dock_state = eval(str(self.settings.value('dockstate').toString()))
+        self.dock_area.restoreState(dock_state)
         self.settings.endGroup()
 
         self.restoreGeometry(geometry)
@@ -49,6 +51,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.settings.beginGroup('mainwindow')
         self.settings.setValue('geometry', self.saveGeometry())
         self.settings.setValue('windowstate', self.saveState())
+        dock_state = self.dock_area.saveState()
+        # dock_state returned here is a python dictionary. Coundn't find a good
+        # way to save dicts in QSettings, hence just using representation
+        # of it.
+        self.settings.setValue('dockstate', repr(dock_state))
         self.settings.endGroup()
 
     def closeEvent(self, event):
