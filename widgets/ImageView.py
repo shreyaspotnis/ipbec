@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtCore
 import pyqtgraph as pg
 
 
@@ -29,6 +29,6 @@ class ImageView(pg.ImageView):
     def __init__(self, settings, parent=None):
         self.imageItem = ImageItem()
         super(ImageView, self).__init__(parent=parent, name='BEC',
-                                          imageItem=self.imageItem)
+                                        imageItem=self.imageItem)
         self.imageItem.singleClicked.connect(self.singleClicked)
         self.imageItem.doubleClicked.connect(self.doubleClicked)

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Shreyas Potnis</author>
+ <class>ScanDirectory</class>
+ <widget class="QWidget" name="ScanDirectory">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>428</width>
+    <height>363</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>412</width>
+     <height>351</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="10" column="1">
+     <widget class="QLabel" name="satPixelCountLabel">
+      <property name="text">
+       <string>Saturation Pixel Counts:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="0">
+     <widget class="QCheckBox" name="correctSaturationCheckBox">
+      <property name="text">
+       <string>Correct Saturation</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0" colspan="3">
+     <widget class="QPlainTextEdit" name="commentTextEdit">
+      <property name="toolTip">
+       <string>Add Comments to this file.
+Add tags using t:. For example t:probe_scan.</string>
+      </property>
+      <property name="plainText">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="2">
+     <widget class="QDoubleSpinBox" name="detuningSpin"/>
+    </item>
+    <item row="6" column="2">
+     <widget class="QDoubleSpinBox" name="odMaxSpin">
+      <property name="toolTip">
+       <string>Any pixel with OD greater than this will be set to this.</string>
+      </property>
+      <property name="minimum">
+       <double>-10.000000000000000</double>
+      </property>
+      <property name="value">
+       <double>5.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="0" colspan="3">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Add Image Processing here</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QSpinBox" name="imageIndexSpin">
+      <property name="toolTip">
+       <string>Jump to a given index</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <widget class="QLabel" name="maxImageIndexLabel">
+      <property name="toolTip">
+       <string>maximum value of index. Index starts from 0</string>
+      </property>
+      <property name="text">
+       <string>of 0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QComboBox" name="imageTypeCombo">
+      <property name="toolTip">
+       <string>Select image type</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>Absorption</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Reference</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Divided</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Dark</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="3">
+     <widget class="QComboBox" name="imageListCombo">
+      <property name="toolTip">
+       <string>Select file to view from list</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QDoubleSpinBox" name="odMinSpin">
+      <property name="toolTip">
+       <string>Any pixel with OD less than this will be set to this.</string>
+      </property>
+      <property name="minimum">
+       <double>-10.000000000000000</double>
+      </property>
+      <property name="value">
+       <double>-0.500000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="2">
+     <widget class="QDoubleSpinBox" name="satPixCountsSpin"/>
+    </item>
+    <item row="11" column="1">
+     <widget class="QLabel" name="detuningLabel">
+      <property name="text">
+       <string>Detuning (MHz)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="3">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="odLabel">
+      <property name="text">
+       <string>OD Min Max</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0" colspan="3">
+     <widget class="QLabel" name="fileDateTime">
+      <property name="toolTip">
+       <string>Modified time for the absorption image</string>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>imageIndexSpin</tabstop>
+  <tabstop>imageTypeCombo</tabstop>
+  <tabstop>odMaxSpin</tabstop>
+  <tabstop>imageListCombo</tabstop>
+  <tabstop>odMinSpin</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

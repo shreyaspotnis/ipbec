@@ -1,6 +1,6 @@
 from PyQt4 import QtGui, uic
 from pyqtgraph.dockarea import DockArea, Dock
-from widgets.ImageView import ImageView
+from widgets import ImageView, ImageBrowser
 
 Ui_MainWindow, QMainWindow = uic.loadUiType("ui/MainWindow.ui")
 
@@ -24,8 +24,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def createDocks(self):
         """Create all dock widgets and add them to DockArea."""
         self.image_view = ImageView(self.settings, self)
+        self.image_browser = ImageBrowser(self.settings, self)
+
         self.dock_image_view = Dock('Image View', widget=self.image_view)
+        self.dock_image_browser = Dock('Image Browser', widget=self.image_browser)
+
         self.dock_area.addDock(self.dock_image_view, position='top')
+        self.dock_area.addDock(self.dock_image_browser, position='right',
+                               relativeTo=self.dock_image_view)
 
     def loadSettings(self):
         """Load window state from self.settings"""
