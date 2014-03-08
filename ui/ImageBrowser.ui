@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <author>Shreyas Potnis</author>
- <class>ScanDirectory</class>
- <widget class="QWidget" name="ScanDirectory">
+ <class>ImageBrowser</class>
+ <widget class="QWidget" name="ImageBrowser">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -159,13 +159,6 @@ Add tags using t:. For example t:probe_scan.</string>
       </property>
      </spacer>
     </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="odLabel">
-      <property name="text">
-       <string>OD Min Max</string>
-      </property>
-     </widget>
-    </item>
     <item row="3" column="0" colspan="3">
      <widget class="QLabel" name="fileDateTime">
       <property name="toolTip">
@@ -173,6 +166,13 @@ Add tags using t:. For example t:probe_scan.</string>
       </property>
       <property name="text">
        <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QCheckBox" name="odMinMaxCheck">
+      <property name="text">
+       <string>OD Min Max</string>
       </property>
      </widget>
     </item>
@@ -188,4 +188,7 @@ Add tags using t:. For example t:probe_scan.</string>
  </tabstops>
  <resources/>
  <connections/>
+ <slots>
+  <slot>odMinMaxChanged()</slot>
+ </slots>
 </ui>

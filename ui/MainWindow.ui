@@ -51,6 +51,9 @@
    <property name="toolTip">
     <string>Change current directory</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
   </action>
   <action name="actionDark_File">
    <property name="text">
@@ -63,6 +66,9 @@
   <action name="actionRefresh">
    <property name="text">
     <string>Refresh</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
    </property>
   </action>
   <action name="actionClean">

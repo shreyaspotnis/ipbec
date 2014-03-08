@@ -21,17 +21,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.createDocks()
         self.loadSettings()
 
+        self.connectSignalsToSlots()
+
     def createDocks(self):
         """Create all dock widgets and add them to DockArea."""
         self.image_view = ImageView(self.settings, self)
         self.image_browser = ImageBrowser(self.settings, self)
 
         self.dock_image_view = Dock('Image View', widget=self.image_view)
-        self.dock_image_browser = Dock('Image Browser', widget=self.image_browser)
+        self.dock_image_browser = Dock('Image Browser',
+                                       widget=self.image_browser)
 
         self.dock_area.addDock(self.dock_image_view, position='top')
         self.dock_area.addDock(self.dock_image_browser, position='right',
                                relativeTo=self.dock_image_view)
+
+    def connectSignalsToSlots(self):
+        self.actionOpen_Directory.triggered.connect(self.image_browser.handleOpenDirectoryAction)
+        self.actionDark_File.triggered.connect(self.image_browser.handleDarkFileAction)
+        self.actionRefresh.triggered.connect(self.image_browser.handleRefreshAction)
+        self.actionClean.triggered.connect(self.image_browser.handleCleanAction)
+        self.actionUse_Cleaned.triggered.connect(self.image_browser.handleUseCleanedAction)
+        self.actionUse_ROI_While_Cleaning.triggered.connect(self.image_browser.handleUseRoiWhileCleaningAction)
 
     def loadSettings(self):
         """Load window state from self.settings"""
