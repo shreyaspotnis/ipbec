@@ -188,7 +188,4 @@ Add tags using t:. For example t:probe_scan.</string>
  </tabstops>
  <resources/>
  <connections/>
- <slots>
-  <slot>odMinMaxChanged()</slot>
- </slots>
 </ui>

@@ -5,22 +5,25 @@ import re
 class ImageList(object):
     """Lists absorption and reference images in a directory"""
 
-    def __init__(self, path_to_dir):
-        self.changeDirectory(path_to_dir)
+    def __init__(self, path_to_dir=None):
+        self.path_to_dir = path_to_dir
+        self.updateFileList()
 
-    def changeDirectory(self, path_to_new_dir):
-        """Updates files to reflect contents of new directory."""
-        if path_to_new_dir is None:
-            return
-        else:
-            self.path_to_dir = path_to_new_dir
-            self.updateFileList()
-
-    def updateFileList(self):
+    def updateFileList(self, path_to_new_dir=None):
         """Updates files to reflect contents of current directory.
 
         Call this function whenever contents of current directory have
-        changed."""
+        changed.
+
+        If current directory has changed, then pass path to new directory as
+        an argument.
+        """
+
+        if path_to_new_dir is not None:
+            self.path_to_dir = path_to_new_dir
+
+        if self.path_to_dir is None:
+            return
 
         # list everything in path_to_dir but only add files which have .tif to
         # the list of files

@@ -19,6 +19,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setCentralWidget(self.dock_area)
 
         self.createDocks()
+        self.initAfterCreatingDockWidgets()
         self.loadSettings()
 
         self.connectSignalsToSlots()
@@ -36,6 +37,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.dock_area.addDock(self.dock_image_browser, position='right',
                                relativeTo=self.dock_image_view)
 
+    def initAfterCreatingDockWidgets(self):
+        self.setWindowTitle(self.image_browser.current_directory)
+
     def connectSignalsToSlots(self):
         self.actionOpen_Directory.triggered.connect(self.image_browser.handleOpenDirectoryAction)
         self.actionDark_File.triggered.connect(self.image_browser.handleDarkFileAction)
@@ -43,6 +47,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionClean.triggered.connect(self.image_browser.handleCleanAction)
         self.actionUse_Cleaned.triggered.connect(self.image_browser.handleUseCleanedAction)
         self.actionUse_ROI_While_Cleaning.triggered.connect(self.image_browser.handleUseRoiWhileCleaningAction)
+
+        self.image_browser.windowTitleChanged.connect(self.setWindowTitle)
 
     def loadSettings(self):
         """Load window state from self.settings"""
@@ -73,3 +79,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.saveSettings()
         self.image_browser.saveSettings()
         super(MainWindow, self).closeEvent(event)
+
+    def setWindowTitle(self, newTitle=''):
+        """Prepend IP-BEC to all window titles."""
+        title = 'IP-BEC: ' + newTitle
+        super(MainWindow, self).setWindowTitle(title)

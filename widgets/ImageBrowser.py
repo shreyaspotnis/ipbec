@@ -1,5 +1,6 @@
 from PyQt4 import uic
 from PyQt4.QtGui import QFileDialog, QMessageBox, QApplication
+from PyQt4.QtCore import pyqtSignal
 from clt import ImageList, ImageListError
 
 Ui_ImageBrowser, QWidget = uic.loadUiType("ui/ImageBrowser.ui")
@@ -7,14 +8,20 @@ Ui_ImageBrowser, QWidget = uic.loadUiType("ui/ImageBrowser.ui")
 
 class ImageBrowser(QWidget, Ui_ImageBrowser):
     """Widget to browse absorption and reference images"""
+
+    windowTitleChanged = pyqtSignal(str)
+
     def __init__(self, settings, parent):
         super(ImageBrowser, self).__init__(parent=parent)
         self.settings = settings
 
         self.current_directory = './'
+        self.image_list = ImageList()
 
         self.setupUi(self)
         self.loadSettings()
+
+        self.image_list = ImageList()
         self.updateFileList()
 
     def updateFileList(self):
@@ -25,7 +32,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         done = False
         while not done:
             try:
-                self.image_list = ImageList(self.current_directory)
+                self.image_list.updateFileList(self.current_directory)
             except ImageListError as err:
                 info = (' Would you like to open a different directory?'
                         ' Press cancel to quit')
@@ -35,7 +42,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                                                QMessageBox.Yes |
                                                QMessageBox.Cancel)
                 if pressed == QMessageBox.Yes:
-                    self.current_directory = self.openDirectoryDialog()
+                    self.setCurrentDirectory(self.openDirectoryDialog())
                 elif pressed == QMessageBox.No:
                     done = True
                 elif pressed == QMessageBox.Cancel:
@@ -46,9 +53,17 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                 done = True
                 print(self.image_list.absorption_files)
 
+    def setCurrentDirectory(self, new_directory):
+        """Sets the current directory.
+
+        Never change self.current_directory directly. Use this function
+        instead."""
+        self.current_directory = new_directory
+        self.windowTitleChanged.emit(self.current_directory)
+
     def loadSettings(self):
         self.settings.beginGroup('imagebrowser')
-        self.current_directory = str(self.settings.value('current_directory').toString())
+        self.setCurrentDirectory(str(self.settings.value('current_directory').toString()))
         self.settings.endGroup()
 
     def saveSettings(self):
@@ -68,7 +83,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         new_directory = self.openDirectoryDialog()
 
         if new_directory is not '' and new_directory != self.current_directory:
-            self.current_directory = new_directory
+            self.setCurrentDirectory(new_directory)
             self.updateFileList()
         # if newDirectory != '' and newDirectory != self.currentDirectory:
         #     self.watcher.removePath(self.currentDirectory)
@@ -85,7 +100,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         print('handled')
 
     def handleRefreshAction(self):
-        print('handled')
+        self.updateFileList()
 
     def handleCleanAction(self):
         print('handled')
