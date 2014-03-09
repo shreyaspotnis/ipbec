@@ -16,7 +16,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         self.settings = settings
 
         self.current_directory = './'
-        self.image_list = ImageList()
+        self.path_to_dark_file = './tests/data/darks/default.tif'
 
         self.setupUi(self)
         self.loadSettings()
@@ -64,11 +64,13 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
     def loadSettings(self):
         self.settings.beginGroup('imagebrowser')
         self.setCurrentDirectory(str(self.settings.value('current_directory').toString()))
+        self.path_to_dark_file = str(self.settings.value('path_to_dark_file').toString())
         self.settings.endGroup()
 
     def saveSettings(self):
         self.settings.beginGroup('imagebrowser')
         self.settings.setValue('current_directory', self.current_directory)
+        self.settings.setValue('path_to_dark_file', self.path_to_dark_file)
         self.settings.endGroup()
 
     def openDirectoryDialog(self):
@@ -97,7 +99,13 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         #     self.watcher.addPath(self.currentDirectory)
 
     def handleDarkFileAction(self):
-        print('handled')
+        """Called when the user clicks the Dark File menu option."""
+        new_path_to_dark_file = str(QFileDialog.getOpenFileName(self,
+                                    "Select dark file",
+                                    self.path_to_dark_file))
+
+        if new_path_to_dark_file != '':
+            self.path_to_dark_file = new_path_to_dark_file
 
     def handleRefreshAction(self):
         self.updateFileList()
