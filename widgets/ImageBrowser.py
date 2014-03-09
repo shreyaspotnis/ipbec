@@ -1,7 +1,7 @@
 from PyQt4 import uic
 from PyQt4.QtGui import QFileDialog, QMessageBox, QApplication
 from PyQt4.QtCore import pyqtSignal, QFileSystemWatcher
-from clt import ImageList, ImageListError
+from clt import ImageList, ImageListError, readImageFile
 import json
 
 import pprint
@@ -49,11 +49,12 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         d['index'] = index
         d['path_to_abs'] = self.image_list.absorption_files[index]
         d['path_to_ref'] = self.image_list.reference_files[index]
+        d['abs_image'] = readImageFile(d['path_to_abs'])
+        d['ref_image'] = readImageFile(d['path_to_ref'])
         d['image_type'] = str(self.imageTypeCombo.currentText())
         d['save_info'] = {}
         d['save_info']['comment'] = str(self.commentTextEdit.toPlainText())
 
-        pprint.pprint(d)
         self.imageChanged.emit(d)
 
     def handleImageIndexValueChanged(self, new_index):
