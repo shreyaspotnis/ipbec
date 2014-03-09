@@ -29,6 +29,28 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         self.watcher.addPath(self.current_directory)
         self.watcher.directoryChanged.connect(self.handleWatcherDirectoryChanged)
 
+        self.connectSignalsToSlots()
+
+    def handleImageIndexValueChanged(self, new_index):
+        """Slot: called when the user changes the current index."""
+        # just update imageList. handleImageListIndexChanged will take care of
+        # the rest
+        self.imageListCombo.setCurrentIndex(new_index)
+
+    def handleImageListIndexChanged(self, new_index):
+        """Slot: called when the user changes the current image in the combo
+        box."""
+        # we need to update imageIndexSpin, but also want to avoid recursive
+        # updates. Hence we disconnect slots before updating.
+        self.imageIndexSpin.valueChanged.disconnect(self.handleImageIndexValueChanged)
+        self.imageIndexSpin.setValue(new_index)
+        self.imageIndexSpin.valueChanged.connect(self.handleImageIndexValueChanged)
+        print(new_index)
+
+    def connectSignalsToSlots(self):
+        self.imageIndexSpin.valueChanged.connect(self.handleImageIndexValueChanged)
+        self.imageListCombo.currentIndexChanged.connect(self.handleImageListIndexChanged)
+
     def updateFileList(self, new_dir=False):
         """Updates image_list to reflect files in current_directory.
 
@@ -151,6 +173,9 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
 
     def handleUseRoiWhileCleaningAction(self, state):
         print('handled', state)
+
+    def handleImageTypeChanged(self, new_state_string):
+        print('new_state_string')
 
     def odMinMaxStateChanged(self, new_state):
         print(new_state)
