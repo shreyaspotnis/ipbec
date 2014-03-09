@@ -32,6 +32,9 @@ class ImageList(object):
                                  and f[-4:] == '.tif')])
         if len(self.files) is 0:
             raise ImageListError('No .tif files in this directory.')
+        if len(self.files) % 2 is not 0:
+            raise ImageListError('Odd number of files in the directory.'
+                                 ' Something is wrong.')
         self.absorption_files = [os.path.join(self.path_to_dir, f)
                                  for f in self.files[::2]]  # even entries
         self.reference_files = [os.path.join(self.path_to_dir, f)
@@ -42,7 +45,7 @@ class ImageList(object):
             ref_name = re.split('Ref.tif', r)[0]
             if abs_name != ref_name:
                 # TODO: handle this error
-                raise ImageListError('Absorption and Reference images do'
+                raise ImageListError('Absorption and Reference image names do'
                                      'not match. Check for missing files.')
 
         self.n_images = len(self.absorption_files)

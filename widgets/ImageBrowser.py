@@ -1,6 +1,6 @@
 from PyQt4 import uic
 from PyQt4.QtGui import QFileDialog, QMessageBox, QApplication
-from PyQt4.QtCore import pyqtSignal
+from PyQt4.QtCore import pyqtSignal, QFileSystemWatcher
 from clt import ImageList, ImageListError
 
 Ui_ImageBrowser, QWidget = uic.loadUiType("ui/ImageBrowser.ui")
@@ -14,6 +14,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
     def __init__(self, settings, parent):
         super(ImageBrowser, self).__init__(parent=parent)
         self.settings = settings
+        self.main_window = parent
 
         self.current_directory = './'
         self.path_to_dark_file = './tests/data/darks/default.tif'
@@ -23,6 +24,10 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
 
         self.image_list = ImageList()
         self.updateFileList(new_dir=True)
+
+        self.watcher = QFileSystemWatcher(self)
+        self.watcher.addPath(self.current_directory)
+        self.watcher.directoryChanged.connect(self.handleWatcherDirectoryChanged)
 
     def updateFileList(self, new_dir=False):
         """Updates image_list to reflect files in current_directory.
@@ -55,6 +60,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                 elif pressed == QMessageBox.Cancel:
                     # user pressed cancel, quit!
                     done = True
+                    self.main_window.close()
                     # TODO: find graceful way to quit
             else:
                 # file updating was successful
@@ -120,8 +126,10 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         new_directory = self.openDirectoryDialog()
 
         if new_directory is not '' and new_directory != self.current_directory:
+            self.watcher.removePath(self.current_directory)
             self.setCurrentDirectory(new_directory)
             self.updateFileList(new_dir=True)
+            self.watcher.addPath(self.current_directory)
 
     def handleDarkFileAction(self):
         """Called when the user clicks the Dark File menu option."""
@@ -149,3 +157,14 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
 
     def correctSaturationStateChanged(self, new_state):
         print(new_state)
+
+    def handleWatcherDirectoryChanged(self, newDir):
+        try:
+            # see if updating the list would generate any errors
+            ImageList(self.current_directory)
+        except ImageListError:
+            # if they do, then we probably are in the middle of a refresh
+            # process, do nothing.
+            return
+        else:
+            self.updateFileList(new_dir=False)
