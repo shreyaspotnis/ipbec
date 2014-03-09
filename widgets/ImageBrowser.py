@@ -2,6 +2,9 @@ from PyQt4 import uic
 from PyQt4.QtGui import QFileDialog, QMessageBox, QApplication
 from PyQt4.QtCore import pyqtSignal, QFileSystemWatcher
 from clt import ImageList, ImageListError
+import json
+
+import pprint
 
 Ui_ImageBrowser, QWidget = uic.loadUiType("ui/ImageBrowser.ui")
 
@@ -10,6 +13,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
     """Widget to browse absorption and reference images"""
 
     windowTitleChanged = pyqtSignal(str)
+    imageChanged = pyqtSignal(dict)
 
     def __init__(self, settings, parent):
         super(ImageBrowser, self).__init__(parent=parent)
@@ -18,18 +22,39 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
 
         self.current_directory = './'
         self.path_to_dark_file = './tests/data/darks/default.tif'
+        self.path_to_json_db = 'image_save_info.json'
+
+        self.current_image_info = {}
 
         self.setupUi(self)
         self.loadSettings()
 
+        self.connectSignalsToSlots()
+
         self.image_list = ImageList()
         self.updateFileList(new_dir=True)
+        self.current_image_index = 0
 
         self.watcher = QFileSystemWatcher(self)
         self.watcher.addPath(self.current_directory)
-        self.watcher.directoryChanged.connect(self.handleWatcherDirectoryChanged)
+        self.watcher.directoryChanged.connect(
+            self.handleWatcherDirectoryChanged)
+        self.updateCommentBox()
 
-        self.connectSignalsToSlots()
+    def populateAndEmitImageInfo(self):
+        """Populates current_image_info with all the required information about
+        the current image. It then emits the imageChanged signal"""
+        d = self.current_image_info
+        index = self.imageListCombo.currentIndex()
+        d['index'] = index
+        d['path_to_abs'] = self.image_list.absorption_files[index]
+        d['path_to_ref'] = self.image_list.reference_files[index]
+        d['image_type'] = str(self.imageTypeCombo.currentText())
+        d['save_info'] = {}
+        d['save_info']['comment'] = str(self.commentTextEdit.toPlainText())
+
+        pprint.pprint(d)
+        self.imageChanged.emit(d)
 
     def handleImageIndexValueChanged(self, new_index):
         """Slot: called when the user changes the current index."""
@@ -42,14 +67,41 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         box."""
         # we need to update imageIndexSpin, but also want to avoid recursive
         # updates. Hence we disconnect slots before updating.
-        self.imageIndexSpin.valueChanged.disconnect(self.handleImageIndexValueChanged)
+
+        self.saveComment()
+
+        self.imageIndexSpin.valueChanged.disconnect(
+            self.handleImageIndexValueChanged)
         self.imageIndexSpin.setValue(new_index)
-        self.imageIndexSpin.valueChanged.connect(self.handleImageIndexValueChanged)
-        print(new_index)
+        self.imageIndexSpin.valueChanged.connect(
+            self.handleImageIndexValueChanged)
+
+        self.populateAndEmitImageInfo()
+        self.current_image_index = new_index
+        self.updateCommentBox()
+
+    def saveComment(self):
+        """Get contents of comment box and save it in global_save_info."""
+        comment = str(self.commentTextEdit.toPlainText())
+        key = self.image_list.absorption_files[self.current_image_index]
+        if key not in self.global_save_info:
+            self.global_save_info[key] = {}
+        self.global_save_info[key]['comment'] = comment
+
+    def updateCommentBox(self):
+        """Updates comment box to display comment for the current image."""
+        key = self.image_list.absorption_files[self.current_image_index]
+        if key not in self.global_save_info:
+            self.commentTextEdit.setPlainText('')
+        else:
+            comment = self.global_save_info[key]['comment']
+            self.commentTextEdit.setPlainText(comment)
 
     def connectSignalsToSlots(self):
-        self.imageIndexSpin.valueChanged.connect(self.handleImageIndexValueChanged)
-        self.imageListCombo.currentIndexChanged.connect(self.handleImageListIndexChanged)
+        self.imageIndexSpin.valueChanged.connect(
+            self.handleImageIndexValueChanged)
+        self.imageListCombo.currentIndexChanged.connect(
+            self.handleImageListIndexChanged)
 
     def updateFileList(self, new_dir=False):
         """Updates image_list to reflect files in current_directory.
@@ -93,6 +145,12 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                     # we probably want to keep the current index
                     previous_text = self.imageListCombo.currentText()
 
+                # disconnect slots before adding items
+                self.imageListCombo.currentIndexChanged.disconnect(
+                    self.handleImageListIndexChanged)
+                self.imageIndexSpin.valueChanged.disconnect(
+                    self.handleImageIndexValueChanged)
+
                 # update image List combo
                 self.imageListCombo.clear()
                 self.imageListCombo.addItems(self.image_list.short_names)
@@ -116,6 +174,12 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                 self.imageListCombo.setCurrentIndex(ci)
                 self.imageIndexSpin.setValue(ci)
 
+                # connect slot again once done adding
+                self.imageListCombo.currentIndexChanged.connect(
+                    self.handleImageListIndexChanged)
+                self.imageIndexSpin.valueChanged.connect(
+                    self.handleImageIndexValueChanged)
+
     def setCurrentDirectory(self, new_directory):
         """Sets the current directory.
 
@@ -126,15 +190,74 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
 
     def loadSettings(self):
         self.settings.beginGroup('imagebrowser')
-        self.setCurrentDirectory(str(self.settings.value('current_directory').toString()))
-        self.path_to_dark_file = str(self.settings.value('path_to_dark_file').toString())
+        self.setCurrentDirectory(
+            str(self.settings.value('current_directory').toString()))
+        self.path_to_dark_file = str(
+            self.settings.value('path_to_dark_file').toString())
+        self.path_to_json_db = str(self.settings.value(
+                                   'path_to_json_db',
+                                   './image_save_info.json').toString())
+
         self.settings.endGroup()
+        self.loadJsonFile()
+
+    def loadJsonFile(self):
+        info = ('\n\nSomething bad has happened and I am not equipped to '
+                'handle it. Please check if ' + self.path_to_json_db +
+                ' exists. If it does, then make a backup of this file as '
+                'it has a lot of information. Press yes if you would like '
+                'to select a new database file. This has to be a valid JSON '
+                'file. {} is an empty but valid JSON file. '
+                'Press no if you want to '
+                'create a new empty database at the same location. '
+                'Press cancel if you want me be to crash horribly but '
+                'without touching the database file.')
+        done = False
+        while not done:
+            try:
+                with open(self.path_to_json_db, 'r') as f:
+                    self.global_save_info = json.loads(f.read())
+            except IOError as (errno, strerror):
+                # something bad wrong
+                msg = str(strerror)
+            except ValueError as err:
+                msg = str(err)
+            except:
+                msg = "Unknown error."
+            else:
+                done = True
+
+            if not done:
+                pressed = QMessageBox.critical(self, 'Error opening database',
+                                               msg + info, QMessageBox.No |
+                                               QMessageBox.Yes |
+                                               QMessageBox.Cancel)
+                if pressed == QMessageBox.Yes:
+                    # file dialog
+                    new_path = str(QFileDialog.getOpenFileName(self,
+                                   "Select new JSON file",
+                                   self.path_to_json_db))
+                    self.path_to_json_db = new_path
+                    done = False
+                elif pressed == QMessageBox.No:
+                    self.global_save_info = {}
+                    done = True
+                elif pressed == QMessageBox.Cancel:
+                    done = True
+                    self.global_save_info = {}
+                    self.path_to_json_db = './temp_crash_json'
+                    self.main_window.close()
 
     def saveSettings(self):
         self.settings.beginGroup('imagebrowser')
         self.settings.setValue('current_directory', self.current_directory)
         self.settings.setValue('path_to_dark_file', self.path_to_dark_file)
+        self.settings.setValue('path_to_json_db', self.path_to_json_db)
         self.settings.endGroup()
+        json_file_as_string = json.dumps(self.global_save_info, indent=4,
+                                         separators=(',', ': '))
+        with open(self.path_to_json_db, 'w') as f:
+            f.write(json_file_as_string)
 
     def openDirectoryDialog(self):
         """Opens a dialog to select and new directory and returns path to
