@@ -36,6 +36,7 @@ class ImageList(object):
                                  for f in self.files[::2]]  # even entries
         self.reference_files = [os.path.join(self.path_to_dir, f)
                                 for f in self.files[1:][::2]]  # odd entries
+        self.short_names = [f[:-7] for f in self.files[::2]]
         for a, r in zip(self.absorption_files, self.reference_files):
             abs_name = re.split('Abs.tif', a)[0]
             ref_name = re.split('Ref.tif', r)[0]

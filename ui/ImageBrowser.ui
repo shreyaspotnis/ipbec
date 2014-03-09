@@ -187,5 +187,42 @@ Add tags using t:. For example t:probe_scan.</string>
   <tabstop>odMinSpin</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>odMinMaxCheck</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>odMinMaxStateChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>55</x>
+     <y>337</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>4</x>
+     <y>315</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>correctSaturationCheckBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>correctSaturationStateChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>81</x>
+     <y>374</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>2</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>odMinMaxStateChanged()</slot>
+  <slot>correctSaturationStateChanged()</slot>
+ </slots>
 </ui>

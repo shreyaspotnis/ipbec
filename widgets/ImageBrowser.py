@@ -22,17 +22,23 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         self.loadSettings()
 
         self.image_list = ImageList()
-        self.updateFileList()
+        self.updateFileList(new_dir=True)
 
-    def updateFileList(self):
+    def updateFileList(self, new_dir=False):
         """Updates image_list to reflect files in current_directory.
+
+        Pass new_dir=True if current_directory has changed.
 
         If an error occured, gives the user the option to select a different
         directory."""
+
         done = False
         while not done:
             try:
-                self.image_list.updateFileList(self.current_directory)
+                if new_dir:
+                    self.image_list.updateFileList(self.current_directory)
+                else:
+                    self.image_list.updateFileList()
             except ImageListError as err:
                 info = (' Would you like to open a different directory?'
                         ' Press cancel to quit')
@@ -43,6 +49,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                                                QMessageBox.Cancel)
                 if pressed == QMessageBox.Yes:
                     self.setCurrentDirectory(self.openDirectoryDialog())
+                    new_dir = True
                 elif pressed == QMessageBox.No:
                     done = True
                 elif pressed == QMessageBox.Cancel:
@@ -50,8 +57,36 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                     done = True
                     # TODO: find graceful way to quit
             else:
+                # file updating was successful
                 done = True
-                print(self.image_list.absorption_files)
+
+                if new_dir is False:
+                    # This means we are just refreshing the current directory
+                    # we probably want to keep the current index
+                    previous_text = self.imageListCombo.currentText()
+
+                # update image List combo
+                self.imageListCombo.clear()
+                self.imageListCombo.addItems(self.image_list.short_names)
+
+                # update image index
+                max_index = self.image_list.n_images - 1
+                self.imageIndexSpin.setMaximum(max_index)
+                labelString = 'of' + str(max_index)
+                self.maxImageIndexLabel.setText(labelString)
+
+                if new_dir is False:
+                    # find if the previous image is still around
+                    try:
+                        ci = self.image_list.short_names.index(previous_text)
+                    except ValueError:
+                        # nope, it's not there. set current index to max index
+                        ci = max_index
+                else:
+                    # if we have a new folder, then set the index to 0
+                    ci = 0
+                self.imageListCombo.setCurrentIndex(ci)
+                self.imageIndexSpin.setValue(ci)
 
     def setCurrentDirectory(self, new_directory):
         """Sets the current directory.
@@ -86,17 +121,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
 
         if new_directory is not '' and new_directory != self.current_directory:
             self.setCurrentDirectory(new_directory)
-            self.updateFileList()
-        # if newDirectory != '' and newDirectory != self.currentDirectory:
-        #     self.watcher.removePath(self.currentDirectory)
-        #     self.currentDirectory = newDirectory
-        #     self.internalConfig.set('ScanDirectory', 'currentDirectory',
-        #                             self.currentDirectory)
-        #     self.updateInternalConfig()
-        #     self.updateOpenDirectoryToolTip()
-        #     self.handleRefresh(changeDir=True)
-
-        #     self.watcher.addPath(self.currentDirectory)
+            self.updateFileList(new_dir=True)
 
     def handleDarkFileAction(self):
         """Called when the user clicks the Dark File menu option."""
@@ -108,7 +133,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
             self.path_to_dark_file = new_path_to_dark_file
 
     def handleRefreshAction(self):
-        self.updateFileList()
+        self.updateFileList(new_dir=False)
 
     def handleCleanAction(self):
         print('handled')
@@ -119,3 +144,8 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
     def handleUseRoiWhileCleaningAction(self, state):
         print('handled', state)
 
+    def odMinMaxStateChanged(self, new_state):
+        print(new_state)
+
+    def correctSaturationStateChanged(self, new_state):
+        print(new_state)
