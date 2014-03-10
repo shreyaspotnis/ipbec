@@ -1,7 +1,7 @@
 from PyQt4 import uic
 from PyQt4.QtGui import QFileDialog, QMessageBox, QApplication
 from PyQt4.QtCore import pyqtSignal, QFileSystemWatcher
-from clt import ImageList, ImageListError, readImageFile
+from clt import ImageList, ImageListError, readImageFile, dividedImage
 import json
 
 import pprint
@@ -49,11 +49,18 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         d['index'] = index
         d['path_to_abs'] = self.image_list.absorption_files[index]
         d['path_to_ref'] = self.image_list.reference_files[index]
+        d['path_to_dark'] = self.path_to_dark_file
         d['abs_image'] = readImageFile(d['path_to_abs'])
         d['ref_image'] = readImageFile(d['path_to_ref'])
+        d['dark_image'] = readImageFile(d['path_to_dark'])
+        d['div_image'] = dividedImage(d['abs_image'], d['ref_image'],
+                                      d['dark_image'],
+                                      od_minmax=self.getODMinMax())
         d['image_type'] = str(self.imageTypeCombo.currentText())
         d['save_info'] = {}
         d['save_info']['comment'] = str(self.commentTextEdit.toPlainText())
+
+        pprint.pprint(d)
 
         self.imageChanged.emit(d)
 
@@ -77,9 +84,9 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         self.imageIndexSpin.valueChanged.connect(
             self.handleImageIndexValueChanged)
 
-        self.populateAndEmitImageInfo()
         self.current_image_index = new_index
         self.updateCommentBox()
+        self.populateAndEmitImageInfo()
 
     def saveComment(self):
         """Get contents of comment box and save it in global_save_info."""
@@ -317,3 +324,12 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
             return
         else:
             self.updateFileList(new_dir=False)
+
+    def getODMinMax(self):
+        """Return a tuple with min and max OD values read from the UI.
+        returns None if odMinMax check button is not checked."""
+        if self.odMinMaxCheck.checkState() is 0:
+            return None
+        else:
+            return (self.odMinSpin.value(), self.odMaxSpin.value())
+            print('')

@@ -1,2 +1,2 @@
 from ImageList import ImageList, ImageListError
-from imtools import readImageFile
+from imtools import readImageFile, dividedImage
