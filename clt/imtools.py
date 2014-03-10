@@ -1,9 +1,10 @@
 import numpy as np
 from matplotlib.pyplot import imread
 from repose_lru import lru_cache
+import matplotlib.pyplot as plt
 
 
-@lru_cache(maxsize=200)
+# @lru_cache(maxsize=200)
 def readImageFile(path):
         """Read .tif file and return numpy array with the image.
 
@@ -18,7 +19,7 @@ def readImageFile(path):
         return np.array(Image - 2 ** 15, dtype=float)
 
 
-def dividedImage(self, abs_image_, ref_image_, dark_image=None,
+def dividedImage(abs_image_, ref_image_, dark_image=None,
                  od_minmax=None):
         abs_image = np.array(abs_image_)
         ref_image = np.array(ref_image_)
@@ -26,16 +27,19 @@ def dividedImage(self, abs_image_, ref_image_, dark_image=None,
             abs_image -= dark_image
             ref_image -= dark_image
         # avoid a divide by zero, or taking a log of zero.
-        abs_image = np.array((abs_image <= 0) * 1 + (abs_image > 0) * abs_image,
+        abs_image = np.array((abs_image <= 0) * 1.0 + (abs_image > 0) * abs_image,
                             dtype=float)
-        ref_image = np.array((ref_image <= 0) * 1 + (ref_image > 0) * ref_image,
+        ref_image = np.array((ref_image <= 0) * 1.0 + (ref_image > 0) * ref_image,
                             dtype=float)
         divImage = np.log(ref_image / abs_image)
+
         if od_minmax is not None:
             minMask = divImage < od_minmax[0]
             maxMask = divImage > od_minmax[1]
             return (minMask * od_minmax[0] + maxMask * od_minmax[1] +
                     (~minMask & ~maxMask) * divImage)
+        else:
+            return divImage
 
 
 def normalize(im, mask=None):

@@ -236,10 +236,75 @@ Add tags using t:. For example t:probe_scan.</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>imageTypeCombo</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>populateAndEmitImageInfo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>47</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>4</x>
+     <y>15</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>odMinMaxCheck</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>populateAndEmitImageInfo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>102</x>
+     <y>344</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>315</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>odMinSpin</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>populateAndEmitImageInfo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>168</x>
+     <y>343</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>369</x>
+     <y>280</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>odMaxSpin</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>populateAndEmitImageInfo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>288</x>
+     <y>337</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>221</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>odMinMaxStateChanged()</slot>
   <slot>correctSaturationStateChanged()</slot>
   <slot>handleImageTypeChanged()</slot>
+  <slot>populateAndEmitImageInfo()</slot>
  </slots>
 </ui>

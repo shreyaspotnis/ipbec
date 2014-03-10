@@ -24,6 +24,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.connectSignalsToSlots()
 
+        # all signals in place, send out the first image
+        self.image_browser.populateAndEmitImageInfo()
+
     def createDocks(self):
         """Create all dock widgets and add them to DockArea."""
         self.image_view = ImageView(self.settings, self)
@@ -49,6 +52,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionUse_ROI_While_Cleaning.triggered.connect(self.image_browser.handleUseRoiWhileCleaningAction)
 
         self.image_browser.windowTitleChanged.connect(self.setWindowTitle)
+        self.image_browser.imageChanged.connect(self.image_view.handleImageChanged)
 
     def loadSettings(self):
         """Load window state from self.settings"""

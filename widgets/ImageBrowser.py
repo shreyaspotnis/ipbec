@@ -40,6 +40,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         self.watcher.directoryChanged.connect(
             self.handleWatcherDirectoryChanged)
         self.updateCommentBox()
+        self.populateAndEmitImageInfo()
 
     def populateAndEmitImageInfo(self):
         """Populates current_image_info with all the required information about
@@ -56,13 +57,19 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         d['div_image'] = dividedImage(d['abs_image'], d['ref_image'],
                                       d['dark_image'],
                                       od_minmax=self.getODMinMax())
-        d['image_type'] = str(self.imageTypeCombo.currentText())
+        d['image_type'] = self.getImageType()
         d['save_info'] = {}
         d['save_info']['comment'] = str(self.commentTextEdit.toPlainText())
 
-        pprint.pprint(d)
+        # pprint.pprint(d)
 
         self.imageChanged.emit(d)
+
+    def getImageType(self):
+        imtype = str(self.imageTypeCombo.currentText())
+        imcode = {'Absorption': 'abs_image', 'Reference': 'ref_image',
+                  'Divided': 'div_image', 'Dark': 'dark_image'}
+        return imcode[imtype]
 
     def handleImageIndexValueChanged(self, new_index):
         """Slot: called when the user changes the current index."""
@@ -328,8 +335,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
     def getODMinMax(self):
         """Return a tuple with min and max OD values read from the UI.
         returns None if odMinMax check button is not checked."""
-        if self.odMinMaxCheck.checkState() is 0:
+        if self.odMinMaxCheck.checkState() == 0:
             return None
         else:
             return (self.odMinSpin.value(), self.odMaxSpin.value())
-            print('')

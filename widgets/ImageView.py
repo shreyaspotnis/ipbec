@@ -1,6 +1,11 @@
 from PyQt4 import QtCore
 import pyqtgraph as pg
 
+# If the following line is not included, pyqtgraph crashes. Bug which is
+# already fixed in subsequent releases of pyqtgraph.
+# https://groups.google.com/forum/#!msg/pyqtgraph/O7E2sWaEWDg/7KPVeiO6qooJ
+pg.functions.USE_WEAVE = False
+
 
 class ImageItem(pg.ImageItem):
     """Custom ImageItem to handle single and double clicks.
@@ -32,3 +37,8 @@ class ImageView(pg.ImageView):
                                         imageItem=self.imageItem)
         self.imageItem.singleClicked.connect(self.singleClicked)
         self.imageItem.doubleClicked.connect(self.doubleClicked)
+
+    def handleImageChanged(self, image_info):
+        im = image_info[image_info['image_type']]
+        self.setImage(im)
+        # super(ImageView, self).setImage(im)
