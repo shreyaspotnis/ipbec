@@ -40,5 +40,6 @@ class ImageView(pg.ImageView):
 
     def handleImageChanged(self, image_info):
         im = image_info[image_info['image_type']]
+
         self.setImage(im)
         # super(ImageView, self).setImage(im)

@@ -5,3 +5,7 @@ Naming conventions -
 
 
 Make a big dictionary called image_info. This dictionary has another dictionary called save_info. That's the stuff that will be saved. Whenever image_browser opens a new file, it will create image_info, fill it up with all the relevant information, including save_info and emit it. Whoever pleases will connect that signal to their own slot, get any information that they need. Save any information that they like it save_info. Whenevery a new image_info is about to be emitted, image_browser will save the data in the current image_info and then load it up in the new image_info. I think that makes sense for now.
+
+global_save_info is a dictionary that gets saved in JSON format. Each absorption image has a key associated with it. The key is just the complete path of the image. Hence, there should be a unique key for every image.
+
+current_image_info is a dictionary that has all the information about the current image being displayed. It also has another dictionary in it called save_info. This dictionary contains all the image specific saving information. Any widget can add keys to this dictionary. When the current image is changed, ImageBrowser will save the contents of this dictionary. Widgets must make sure that they add a copy of the information, in case they override that information later on.

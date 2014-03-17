@@ -1,6 +1,6 @@
 from PyQt4 import uic
-from PyQt4.QtGui import QFileDialog, QMessageBox, QApplication
-from PyQt4.QtCore import pyqtSignal, QFileSystemWatcher
+from PyQt4.QtGui import QFileDialog, QMessageBox, QApplication, QProgressDialog
+from PyQt4.QtCore import pyqtSignal, QFileSystemWatcher, Qt
 from clt import ImageList, ImageListError, readImageFile, dividedImage
 import json
 
@@ -28,6 +28,9 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
 
         self.setupUi(self)
         self.loadSettings()
+        self.use_cleaned_refs = False
+        self.is_cleaned = False
+        self.use_roi_while_cleaning = False
 
         self.connectSignalsToSlots()
 
@@ -83,7 +86,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         # we need to update imageIndexSpin, but also want to avoid recursive
         # updates. Hence we disconnect slots before updating.
 
-        self.saveComment()
+        self.saveImageInfo()
 
         self.imageIndexSpin.valueChanged.disconnect(
             self.handleImageIndexValueChanged)
@@ -95,12 +98,17 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         self.updateCommentBox()
         self.populateAndEmitImageInfo()
 
-    def saveComment(self):
-        """Get contents of comment box and save it in global_save_info."""
+    def saveImageInfo(self):
+        """Get save_info contents of current_image_info and save it in
+        global_save_info.
+
+        TODO: write better description of this function.
+        """
         comment = str(self.commentTextEdit.toPlainText())
         key = self.image_list.absorption_files[self.current_image_index]
-        if key not in self.global_save_info:
-            self.global_save_info[key] = {}
+        # if key not in self.global_save_info:
+        #     self.global_save_info[key] = {}
+        self.global_save_info[key] = self.current_image_info['save_info']
         self.global_save_info[key]['comment'] = comment
 
     def updateCommentBox(self):
@@ -194,6 +202,8 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                     self.handleImageListIndexChanged)
                 self.imageIndexSpin.valueChanged.connect(
                     self.handleImageIndexValueChanged)
+
+                self.populateAndEmitImageInfo()
 
     def setCurrentDirectory(self, new_directory):
         """Sets the current directory.
@@ -304,13 +314,40 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         self.updateFileList(new_dir=False)
 
     def handleCleanAction(self):
-        print('handled')
+        progress = QProgressDialog('Reading Reference images', 'Abort',
+                                   0, 4.0*self.image_list.n_images, self)
+        progress.setWindowModality(Qt.WindowModal)
+        progress.setMinimumDuration(1)
+
+        if self.readAllRefImages(progress):
+            return
+        if self.generateBasis(progress):
+            return
+        if self.readAllAbsImages(progress):
+            return
+        if self.generateCleanRefs(progress):
+            return
+
+        progress.setValue(4.0*self.image_list.n_images)
+
+    def readAllRefImages(self, progress):
+        pass
+
+    def generateBasis(self, progress):
+        pass
+
+    def readAllAbsImages(self, progress):
+        pass
+
+    def generateCleanRefs(self, progress):
+        pass
 
     def handleUseCleanedAction(self, state):
-        print('handled', state)
+        self.use_cleaned_refs = bool(state)
+        self.populateAndEmitImageInfo()
 
     def handleUseRoiWhileCleaningAction(self, state):
-        print('handled', state)
+        self.use_roi_while_cleaning = bool(state)
 
     def handleImageTypeChanged(self, new_state_string):
         print('new_state_string')

@@ -4,7 +4,7 @@ from repose_lru import lru_cache
 import matplotlib.pyplot as plt
 
 
-# @lru_cache(maxsize=200)
+@lru_cache(maxsize=200)
 def readImageFile(path):
         """Read .tif file and return numpy array with the image.
 
