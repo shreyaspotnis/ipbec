@@ -1,9 +1,7 @@
 from PyQt4 import uic
 from PyQt4.QtGui import QFileDialog, QMessageBox, QApplication, QProgressDialog
 from PyQt4.QtCore import pyqtSignal, QFileSystemWatcher, Qt
-from clt import ImageList, ImageListError, readImageFile, dividedImage
-from clt import generateBasis, generateCleanRefs
-from clt import normalize, innerProduct, projector
+import clt
 import json
 import numpy as np
 import matplotlib.pyplot as plt
@@ -36,7 +34,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
 
         self.connectSignalsToSlots()
 
-        self.image_list = ImageList()
+        self.image_list = clt.ImageList()
         self.updateFileList(new_dir=True)
         self.current_image_index = 0
 
@@ -56,19 +54,17 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         d['path_to_abs'] = self.image_list.absorption_files[index]
         d['path_to_ref'] = self.image_list.reference_files[index]
         d['path_to_dark'] = self.path_to_dark_file
-        d['abs_image'] = readImageFile(d['path_to_abs'])
-        d['ref_image'] = readImageFile(d['path_to_ref'])
-        d['dark_image'] = readImageFile(d['path_to_dark'])
+        d['abs_image'] = clt.readImageFile(d['path_to_abs'])
+        d['ref_image'] = clt.readImageFile(d['path_to_ref'])
+        d['dark_image'] = clt.readImageFile(d['path_to_dark'])
 
         if self.is_cleaned and self.useCleanedCheck.checkState() == 2:
-            print('using clean')
             ref_image = self.clean_ref_images[index]
         else:
             ref_image = d['ref_image']
-            print('not using clean')
-        d['div_image'] = dividedImage(d['abs_image'], ref_image,
-                                      d['dark_image'],
-                                      od_minmax=self.getODMinMax())
+        d['div_image'] = clt.dividedImage(d['abs_image'], ref_image,
+                                          d['dark_image'],
+                                          od_minmax=self.getODMinMax())
         d['image_type'] = self.getImageType()
         d['save_info'] = {}
         d['save_info']['comment'] = str(self.commentTextEdit.toPlainText())
@@ -348,32 +344,17 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
             if progress.wasCanceled():
                 return 1
             progress.setValue(progress.value() + 1)
-            print(path_to_ref)
-            im = normalize(readImageFile(path_to_ref))
+            im = clt.normalize(clt.readImageFile(path_to_ref))
             self.ref_images.append(im)
 
     def generateBasis(self, progress):
         progress.setLabelText('Generating basis vectors')
-        for i, rI in enumerate(self.ref_images):
+        self.basis = []
+        for b in clt.generateBasis(self.ref_images):
             progress.setValue(progress.value() + 1)
             if progress.wasCanceled():
                 return 1
-            if i is 0:
-                self.basis = [self.ref_images[0]]
-            else:
-                current = np.array(rI)
-                for b in self.basis:
-                    current -= projector(rI, b)
-                self.basis.append(normalize(current))
-            if i == 40:
-                plt.imshow(self.basis[i])
-                plt.show()
-        # self.basis = []
-        # for b in generateBasis(self.ref_images):
-        #     progress.setValue(progress.value() + 1)
-        #     if progress.wasCanceled():
-        #         return 1
-        #     self.basis.append(b)
+            self.basis.append(b)
 
     def readAllAbsImages(self, progress):
         progress.setLabelText('Reading absorption images')
@@ -382,8 +363,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
             progress.setValue(progress.value() + 1)
             if progress.wasCanceled():
                 return 1
-            im = readImageFile(path_to_abs)
-            print(path_to_abs)
+            im = clt.readImageFile(path_to_abs)
             self.abs_images.append(im)
 
     def generateCleanRefs(self, progress):
@@ -394,30 +374,14 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         # TODO: insert code to get actual mask
         # mask = self.getROIMask(abs_shape)
         mask = np.ones(abs_shape)
-        for aI in self.abs_images:
+        self.is_cleaned = False
+        for im in clt.generateCleanRefs(self.abs_images, self.basis, mask):
             progress.setValue(progress.value() + 1)
             if progress.wasCanceled():
                 return 1
-            current = np.zeros(aI.shape, dtype=float)
-            for b in self.basis:
-                current += projector(aI, b, mask)
-            # normalize correctly
-            absLength = innerProduct(aI, aI, mask)
-            currLength = innerProduct(current, current, mask)
-            multFactor = np.sqrt(absLength/currLength)
-            current *= multFactor
-            self.clean_ref_images.append(current)
+            self.clean_ref_images.append(im)
         else:
             self.is_cleaned = True
-        # self.is_cleaned = False
-        # for im in generateCleanRefs(self.abs_images, self.basis, mask):
-        #     progress.setValue(progress.value() + 1)
-        #     if progress.wasCanceled():
-        #         return 1
-        #     self.clean_ref_images.append(im)
-        # else:
-        #     print('is_cleaned', self.is_cleaned)
-        #     self.is_cleaned = True
 
     def handleUseCleanedAction(self, state):
         if self.is_cleaned is False and state == 2:
@@ -439,8 +403,8 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
     def handleWatcherDirectoryChanged(self, newDir):
         try:
             # see if updating the list would generate any errors
-            ImageList(self.current_directory)
-        except ImageListError:
+            clt.ImageList(self.current_directory)
+        except clt.ImageListError:
             # if they do, then we probably are in the middle of a refresh
             # process, do nothing.
             return
