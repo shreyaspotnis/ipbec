@@ -218,7 +218,8 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         self.setCurrentDirectory(
             str(self.settings.value('current_directory').toString()))
         self.path_to_dark_file = str(
-            self.settings.value('path_to_dark_file').toString())
+            self.settings.value('path_to_dark_file',
+            self.path_to_dark_file).toString())
         self.path_to_json_db = str(self.settings.value(
                                    'path_to_json_db',
                                    './image_save_info.json').toString())
