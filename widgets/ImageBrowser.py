@@ -2,8 +2,11 @@ from PyQt4 import uic
 from PyQt4.QtGui import QFileDialog, QMessageBox, QApplication, QProgressDialog
 from PyQt4.QtCore import pyqtSignal, QFileSystemWatcher, Qt
 from clt import ImageList, ImageListError, readImageFile, dividedImage
+from clt import generateBasis, generateCleanRefs
+from clt import normalize, innerProduct, projector
 import json
-
+import numpy as np
+import matplotlib.pyplot as plt
 import pprint
 
 Ui_ImageBrowser, QWidget = uic.loadUiType("ui/ImageBrowser.ui")
@@ -28,7 +31,6 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
 
         self.setupUi(self)
         self.loadSettings()
-        self.use_cleaned_refs = False
         self.is_cleaned = False
         self.use_roi_while_cleaning = False
 
@@ -57,14 +59,19 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         d['abs_image'] = readImageFile(d['path_to_abs'])
         d['ref_image'] = readImageFile(d['path_to_ref'])
         d['dark_image'] = readImageFile(d['path_to_dark'])
-        d['div_image'] = dividedImage(d['abs_image'], d['ref_image'],
+
+        if self.is_cleaned and self.useCleanedCheck.checkState() == 2:
+            print('using clean')
+            ref_image = self.clean_ref_images[index]
+        else:
+            ref_image = d['ref_image']
+            print('not using clean')
+        d['div_image'] = dividedImage(d['abs_image'], ref_image,
                                       d['dark_image'],
                                       od_minmax=self.getODMinMax())
         d['image_type'] = self.getImageType()
         d['save_info'] = {}
         d['save_info']['comment'] = str(self.commentTextEdit.toPlainText())
-
-        # pprint.pprint(d)
 
         self.imageChanged.emit(d)
 
@@ -203,6 +210,9 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                 self.imageIndexSpin.valueChanged.connect(
                     self.handleImageIndexValueChanged)
 
+                self.is_cleaned = False
+                self.useCleanedCheck.setCheckState(0)
+
                 self.populateAndEmitImageInfo()
 
     def setCurrentDirectory(self, new_directory):
@@ -332,26 +342,93 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         progress.setValue(4.0*self.image_list.n_images)
 
     def readAllRefImages(self, progress):
-        pass
+        progress.setLabelText('Reading Reference Images')
+        self.ref_images = []
+        for path_to_ref in self.image_list.reference_files:
+            if progress.wasCanceled():
+                return 1
+            progress.setValue(progress.value() + 1)
+            print(path_to_ref)
+            im = normalize(readImageFile(path_to_ref))
+            self.ref_images.append(im)
 
     def generateBasis(self, progress):
-        pass
+        progress.setLabelText('Generating basis vectors')
+        for i, rI in enumerate(self.ref_images):
+            progress.setValue(progress.value() + 1)
+            if progress.wasCanceled():
+                return 1
+            if i is 0:
+                self.basis = [self.ref_images[0]]
+            else:
+                current = np.array(rI)
+                for b in self.basis:
+                    current -= projector(rI, b)
+                self.basis.append(normalize(current))
+            if i == 40:
+                plt.imshow(self.basis[i])
+                plt.show()
+        # self.basis = []
+        # for b in generateBasis(self.ref_images):
+        #     progress.setValue(progress.value() + 1)
+        #     if progress.wasCanceled():
+        #         return 1
+        #     self.basis.append(b)
 
     def readAllAbsImages(self, progress):
-        pass
+        progress.setLabelText('Reading absorption images')
+        self.abs_images = []
+        for path_to_abs in self.image_list.absorption_files:
+            progress.setValue(progress.value() + 1)
+            if progress.wasCanceled():
+                return 1
+            im = readImageFile(path_to_abs)
+            print(path_to_abs)
+            self.abs_images.append(im)
 
     def generateCleanRefs(self, progress):
-        pass
+        progress.setLabelText('Generating clean reference images')
+        self.clean_ref_images = []
+
+        abs_shape = self.abs_images[0].shape
+        # TODO: insert code to get actual mask
+        # mask = self.getROIMask(abs_shape)
+        mask = np.ones(abs_shape)
+        for aI in self.abs_images:
+            progress.setValue(progress.value() + 1)
+            if progress.wasCanceled():
+                return 1
+            current = np.zeros(aI.shape, dtype=float)
+            for b in self.basis:
+                current += projector(aI, b, mask)
+            # normalize correctly
+            absLength = innerProduct(aI, aI, mask)
+            currLength = innerProduct(current, current, mask)
+            multFactor = np.sqrt(absLength/currLength)
+            current *= multFactor
+            self.clean_ref_images.append(current)
+        else:
+            self.is_cleaned = True
+        # self.is_cleaned = False
+        # for im in generateCleanRefs(self.abs_images, self.basis, mask):
+        #     progress.setValue(progress.value() + 1)
+        #     if progress.wasCanceled():
+        #         return 1
+        #     self.clean_ref_images.append(im)
+        # else:
+        #     print('is_cleaned', self.is_cleaned)
+        #     self.is_cleaned = True
 
     def handleUseCleanedAction(self, state):
-        self.use_cleaned_refs = bool(state)
+        if self.is_cleaned is False and state == 2:
+            self.handleCleanAction()
         self.populateAndEmitImageInfo()
 
     def handleUseRoiWhileCleaningAction(self, state):
         self.use_roi_while_cleaning = bool(state)
 
     def handleImageTypeChanged(self, new_state_string):
-        print('new_state_string')
+        self.populateAndEmitImageInfo()
 
     def odMinMaxStateChanged(self, new_state):
         print(new_state)

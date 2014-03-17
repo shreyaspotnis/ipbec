@@ -47,9 +47,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionOpen_Directory.triggered.connect(self.image_browser.handleOpenDirectoryAction)
         self.actionDark_File.triggered.connect(self.image_browser.handleDarkFileAction)
         self.actionRefresh.triggered.connect(self.image_browser.handleRefreshAction)
-        self.actionClean.triggered.connect(self.image_browser.handleCleanAction)
-        self.actionUse_Cleaned.triggered.connect(self.image_browser.handleUseCleanedAction)
-        self.actionUse_ROI_While_Cleaning.triggered.connect(self.image_browser.handleUseRoiWhileCleaningAction)
 
         self.image_browser.windowTitleChanged.connect(self.setWindowTitle)
         self.image_browser.imageChanged.connect(self.image_view.handleImageChanged)

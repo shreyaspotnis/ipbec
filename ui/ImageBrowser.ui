@@ -19,7 +19,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>351</width>
+     <width>392</width>
      <height>417</height>
     </rect>
    </property>
@@ -65,7 +65,7 @@ Add tags using t:. For example t:probe_scan.</string>
       </property>
      </widget>
     </item>
-    <item row="12" column="0" colspan="3">
+    <item row="13" column="0" colspan="3">
      <widget class="QLabel" name="label">
       <property name="text">
        <string>Add Image Processing here</string>
@@ -176,6 +176,27 @@ Add tags using t:. For example t:probe_scan.</string>
       </property>
      </widget>
     </item>
+    <item row="12" column="0">
+     <widget class="QPushButton" name="pushClean">
+      <property name="text">
+       <string>Clean</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <widget class="QCheckBox" name="excludeROICheck">
+      <property name="text">
+       <string>Exclude ROI</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="2">
+     <widget class="QCheckBox" name="useCleanedCheck">
+      <property name="text">
+       <string>Use Cleaned</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
  </widget>
@@ -195,8 +216,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>odMinMaxStateChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>55</x>
-     <y>337</y>
+     <x>56</x>
+     <y>306</y>
     </hint>
     <hint type="destinationlabel">
      <x>4</x>
@@ -211,8 +232,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>correctSaturationStateChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>81</x>
-     <y>374</y>
+     <x>82</x>
+     <y>337</y>
     </hint>
     <hint type="destinationlabel">
      <x>2</x>
@@ -259,8 +280,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>102</x>
-     <y>344</y>
+     <x>103</x>
+     <y>306</y>
     </hint>
     <hint type="destinationlabel">
      <x>363</x>
@@ -275,8 +296,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>168</x>
-     <y>343</y>
+     <x>292</x>
+     <y>309</y>
     </hint>
     <hint type="destinationlabel">
      <x>369</x>
@@ -291,12 +312,60 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>288</x>
-     <y>337</y>
+     <x>400</x>
+     <y>309</y>
     </hint>
     <hint type="destinationlabel">
      <x>366</x>
      <y>221</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushClean</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>handleCleanAction()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>132</x>
+     <y>395</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>7</x>
+     <y>357</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>useCleanedCheck</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>handleUseCleanedAction()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>324</x>
+     <y>389</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>430</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>excludeROICheck</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>handleUseRoiWhileCleaningAction()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>188</x>
+     <y>386</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>6</x>
+     <y>268</y>
     </hint>
    </hints>
   </connection>
@@ -306,5 +375,8 @@ Add tags using t:. For example t:probe_scan.</string>
   <slot>correctSaturationStateChanged()</slot>
   <slot>handleImageTypeChanged()</slot>
   <slot>populateAndEmitImageInfo()</slot>
+  <slot>handleCleanAction()</slot>
+  <slot>handleUseCleanedAction()</slot>
+  <slot>handleUseRoiWhileCleaningAction()</slot>
  </slots>
 </ui>

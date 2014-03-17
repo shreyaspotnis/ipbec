@@ -42,6 +42,48 @@ def dividedImage(abs_image_, ref_image_, dark_image=None,
             return divImage
 
 
+def basisList(ref_images):
+    for i, rI in enumerate(ref_images):
+        if i is 0:
+            basis = [rI]
+        else:
+            current = np.array(rI)
+            for b in basis:
+                current -= projector(rI, b)
+            basis.append(normalize(current))
+    return basis
+
+
+def generateBasis(ref_images):
+    """Generator for a list of orthonormal basis images based on images
+    supplied in ref_images."""
+    for i, rI in enumerate(ref_images):
+        print(i)
+        if i is 0:
+            basis = [ref_images[0]]
+        else:
+            current = np.array(rI)
+            for b in basis:
+                current -= projector(rI, b)
+            basis.append(normalize(current))
+        yield basis[i]
+
+
+def generateCleanRefs(abs_images, basis, mask):
+    """Generator for clean refs for all absoprtion images. Uses basis to
+    reconstruct ideal absoprtion image."""
+    for aI in abs_images:
+        current = np.zeros(aI.shape, dtype=float)
+        for b in basis:
+            current += projector(aI, b, mask)
+        # normalize correctly
+        absLength = innerProduct(aI, aI, mask)
+        currLength = innerProduct(current, current, mask)
+        multFactor = np.sqrt(absLength/currLength)
+        current *= multFactor
+        yield current
+
+
 def normalize(im, mask=None):
     if mask is None:
         return im / np.sum(im * im) ** 0.5

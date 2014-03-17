@@ -32,16 +32,7 @@
     <addaction name="separator"/>
     <addaction name="actionRefresh"/>
    </widget>
-   <widget class="QMenu" name="menuRef_Images">
-    <property name="title">
-     <string>Ref Images</string>
-    </property>
-    <addaction name="actionClean"/>
-    <addaction name="actionUse_Cleaned"/>
-    <addaction name="actionUse_ROI_While_Cleaning"/>
-   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuRef_Images"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen_Directory">
