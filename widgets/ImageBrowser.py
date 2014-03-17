@@ -5,6 +5,8 @@ import clt
 import json
 import numpy as np
 import matplotlib.pyplot as plt
+import time
+import os
 import pprint
 
 Ui_ImageBrowser, QWidget = uic.loadUiType("ui/ImageBrowser.ui")
@@ -57,6 +59,9 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         d['abs_image'] = clt.readImageFile(d['path_to_abs'])
         d['ref_image'] = clt.readImageFile(d['path_to_ref'])
         d['dark_image'] = clt.readImageFile(d['path_to_dark'])
+
+        modified_time = time.ctime(os.path.getmtime(d['path_to_abs']))
+        self.fileDateTime.setText(str(modified_time))
 
         if self.is_cleaned and self.useCleanedCheck.checkState() == 2:
             ref_image = self.clean_ref_images[index]
