@@ -23,3 +23,6 @@ class Fitter(QWidget, Ui_Fitter):
 
     def loadSettings(self):
         pass
+
+    def handleImageChanged(self, new_dict):
+        print(new_dict)

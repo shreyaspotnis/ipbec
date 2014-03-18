@@ -1,6 +1,6 @@
 from PyQt4 import uic
 from pyqtgraph.dockarea import DockArea, Dock
-from widgets import ImageView, ImageBrowser, Fitter
+from widgets import ImageView, ImageBrowser, Fitter, RoiEditor
 
 Ui_MainWindow, QMainWindow = uic.loadUiType("ui/MainWindow.ui")
 
@@ -33,16 +33,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.image_browser = ImageBrowser(self.settings, self)
         self.fitter = Fitter(self.settings, self)
 
+        self.roi_editor_h = RoiEditor(self.settings,
+                                      self.image_view, self, name='ROIH',
+                                      pen=(1, 9), axis=1)
+        self.roi_editor_v = RoiEditor(self.settings,
+                                      self.image_view, self, name='ROIV',
+                                      pen=(1, 1), axis=0)
+        self.roi_editor_int = RoiEditor(self.settings,
+                                        self.image_view, self, name='ROI Int',
+                                        pen=(1, 2), axis=1)
+
+        # Create docks for all widgets
         self.dock_image_view = Dock('Image View', widget=self.image_view)
         self.dock_image_browser = Dock('Image Browser',
                                        widget=self.image_browser)
         self.dock_fitter = Dock('Fitter', widget=self.fitter)
+        self.dock_roi_h = Dock('ROIH', widget=self.roi_editor_h)
+        self.dock_roi_v = Dock('ROIV', widget=self.roi_editor_v)
+        self.dock_roi_int = Dock('ROI Int', widget=self.roi_editor_int)
 
         self.dock_area.addDock(self.dock_image_view, position='top')
         self.dock_area.addDock(self.dock_image_browser, position='right',
                                relativeTo=self.dock_image_view)
         self.dock_area.addDock(self.dock_fitter, position='left',
                                relativeTo=self.dock_image_view)
+        self.dock_area.addDock(self.dock_roi_h, position='bottom',
+                               relativeTo=self.dock_fitter)
+        self.dock_area.addDock(self.dock_roi_v, position='below',
+                               relativeTo=self.dock_roi_h)
+        self.dock_area.addDock(self.dock_roi_int, position='below',
+                               relativeTo=self.dock_roi_v)
 
     def initAfterCreatingDockWidgets(self):
         self.setWindowTitle(self.image_browser.current_directory)
@@ -54,6 +74,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.image_browser.windowTitleChanged.connect(self.setWindowTitle)
         self.image_browser.imageChanged.connect(self.image_view.handleImageChanged)
+        self.image_browser.imageChanged.connect(self.fitter.handleImageChanged)
 
     def loadSettings(self):
         """Load window state from self.settings"""
@@ -64,7 +85,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         dock_string = str(self.settings.value('dockstate').toString())
         if dock_string is not "":
             dock_state = eval(dock_string)
-            self.dock_area.restoreState(dock_state)
+            try:
+                self.dock_area.restoreState(dock_state)
+            except:
+                pass
         self.settings.endGroup()
 
         self.restoreGeometry(geometry)
