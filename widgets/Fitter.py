@@ -25,4 +25,4 @@ class Fitter(QWidget, Ui_Fitter):
         pass
 
     def handleImageChanged(self, new_dict):
-        print(new_dict)
+        pass

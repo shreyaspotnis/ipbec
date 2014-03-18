@@ -29,11 +29,12 @@ class RoiEditor(QWidget, Ui_RoiEditor):
 
         self.roiNameLabel.setText(name)
 
-        initValues = [0, 0, 100, 100]
-        self.updatePState(initValues)
-        self.updateWState(initValues)
+        iv = self.loadValues()
 
-        self.roi = pg.ROI([0, 0], [100, 100], pen=pen)
+        self.updatePState(iv)
+        self.updateWState(iv)
+
+        self.roi = pg.ROI([iv[0], iv[1]], [iv[2]-iv[0], iv[3]-iv[1]], pen=pen)
         self.imv.addItem(self.roi)
         self.roi.addScaleHandle([1, 1], [0, 0])
         self.roi.addScaleHandle([0, 0], [1, 1])
@@ -42,6 +43,23 @@ class RoiEditor(QWidget, Ui_RoiEditor):
         self.connectPSpinBoxes()
         self.connectWSpinBoxes()
         self.connectROI()
+
+    def loadValues(self):
+        self.settings.beginGroup('RoiEditor'+self.name)
+        roi_string = str(self.settings.value('roi').toString())
+        if roi_string is not "":
+            initValues = eval(roi_string)
+        else:
+            initValues = [0, 0, 100, 100]
+        self.settings.endGroup()
+        print(initValues)
+        return initValues
+
+    def saveSettings(self):
+        val = [sb.value() for sb in self.pSB]
+        self.settings.beginGroup('RoiEditor'+self.name)
+        self.settings.setValue('roi', repr(val))
+        self.settings.endGroup()
 
     def connectButtons(self):
         self.stretchButton.clicked.connect(self.handleStretch)

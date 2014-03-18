@@ -109,6 +109,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def closeEvent(self, event):
         self.saveSettings()
         self.image_browser.saveSettings()
+        self.roi_editor_int.saveSettings()
+        self.roi_editor_v.saveSettings()
+        self.roi_editor_h.saveSettings()
         super(MainWindow, self).closeEvent(event)
 
     def setWindowTitle(self, newTitle=''):
