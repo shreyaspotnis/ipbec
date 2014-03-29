@@ -14,10 +14,10 @@ class Plot1d(pg.PlotWidget):
         self.pFit = self.plot()  # to plot fits
         self.pFit.setPen((255, 0, 0))
 
-    def handleDataChanged(self, data, fit):
-        self.pData.setData(y=data)
+    def handleDataChanged(self, x, data, fit):
+        self.pData.setData(x=x, y=data)
 
         if fit is None:
             self.pFit.setData(y=np.array([]))
         else:
-            self.pFit.setData(fit)
+            self.pFit.setData(x=x, y=fit)

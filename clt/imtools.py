@@ -120,6 +120,19 @@ def getROISlice(im, roi):
     (x1, y1, x2, y2) = roi[0]
     (xm, ym) = im.shape
 
-    return np.mean(im[max(min(x1, x2), 0):min(max(x1, x2), xm),
-                      max(min(y1, y2), 0):min(max(y1, y2), ym)],
-                   axis=roi[1])
+    x1c = max(int(min(x1, x2)), 0)
+    x2c = min(int(max(x1, x2)), xm)
+    y1c = max(int(min(y1, y2)), 0)
+    y2c = min(int(max(y1, y2)), ym)
+
+    print(x1c, x2c, y1c, y2c)
+
+    if roi[1] is 0:
+        indices = np.arange(y1c, y2c)
+    else:
+        indices = np.arange(x1c, x2c)
+
+    sub_im = im[x1c:x2c, y1c:y2c]
+    print(indices.shape, sub_im.shape)
+
+    return (indices, np.mean(sub_im, axis=roi[1]))

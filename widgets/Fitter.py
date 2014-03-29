@@ -16,8 +16,8 @@ class Fitter(QWidget, Ui_Fitter):
     imageChanged = pyqtSignal(object)
 
     # connect to ROIH and ROIV viewer
-    horDataChanged = pyqtSignal(object, object)
-    verDataChanged = pyqtSignal(object, object)
+    horDataChanged = pyqtSignal(object, object, object)
+    verDataChanged = pyqtSignal(object, object, object)
 
     # connect to analyzer
     doneFitting = pyqtSignal()
@@ -131,7 +131,9 @@ class Fitter(QWidget, Ui_Fitter):
         self.handleEmitImage()
 
     def handleContinueClicked(self):
-        print('continue')
+        new_values = [fv for fv in self.fitter.fitParameters]
+        self.fitter.setGuess(new_values)
+        self.handleAutoFit()
 
     def handleFitTypeChanged(self, new_index):
         if not self.initialized:
@@ -245,17 +247,17 @@ class Fitter(QWidget, Ui_Fitter):
     def emitROIHdata(self):
         if self.has_roi_h:
             if self.imageTypeCombo.currentIndex() is 0 and self.is_fitted:
-                fit = imtools.getROISlice(self.fitted_data, self.roi_h)
+                indices, fit = imtools.getROISlice(self.fitted_data, self.roi_h)
             else:
                 fit = None
-            data = imtools.getROISlice(self.emit_image, self.roi_h)
-            self.horDataChanged.emit(data, fit)
+            indices, data = imtools.getROISlice(self.emit_image, self.roi_h)
+            self.horDataChanged.emit(indices, data, fit)
 
     def emitROIVdata(self):
         if self.has_roi_v:
             if self.imageTypeCombo.currentIndex() is 0 and self.is_fitted:
-                fit = imtools.getROISlice(self.fitted_data, self.roi_v)
+                indices, fit = imtools.getROISlice(self.fitted_data, self.roi_v)
             else:
                 fit = None
-            data = imtools.getROISlice(self.emit_image, self.roi_v)
-            self.verDataChanged.emit(data, fit)
+            indices, data = imtools.getROISlice(self.emit_image, self.roi_v)
+            self.verDataChanged.emit(indices, data, fit)
