@@ -138,6 +138,5 @@ def getROISlice(im, roi):
         indices = np.arange(x1, x2)
 
     sub_im = im[x1:x2, y1:y2]
-    print(indices.shape, sub_im.shape)
 
     return (indices, np.mean(sub_im, axis=roi[1]))

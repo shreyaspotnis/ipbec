@@ -73,7 +73,8 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                                           d['dark_image'],
                                           od_minmax=self.getODMinMax())
         d['image_type'] = self.getImageType()
-        d['save_info'] = {}
+        key = d['path_to_abs']
+        d['save_info'] = self.global_save_info[key]
         d['save_info']['comment'] = str(self.commentTextEdit.toPlainText())
 
         self.imageChanged.emit(d)

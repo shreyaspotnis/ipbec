@@ -110,7 +110,33 @@ class Fitter(QWidget, Ui_Fitter):
             self.fit_output = self.fitter.fit(nCalls)
         self.fitted_data = self.fitter.fittedData()
 
-        # TODO: update dictionary with all the fitting parameters
+        if 'fitter' in self.image_info['save_info']:
+            fitter_dict = self.image_info['save_info']['fitter']
+        else:
+            fitter_dict = {}
+
+        print(fitter_dict)
+        fit_info = {}
+        parms = {}
+        errors = {}
+        for parm_name, fit_value, err in zip(self.fitter.parameterNames,
+                                             self.fitter.fitParameters,
+                                             self.fitter.fitParmSD):
+            parms[parm_name] = fit_value
+            errors[parm_name] = err
+
+        (p, cov_p, info_dict, mesg, ier, s_sq, time_diff) = self.fit_output
+
+        fit_info['parms'] = parms
+        fit_info['errors'] = errors
+        fit_info['time_taken'] = time_diff
+        fit_info['message'] = mesg
+
+        # TODO: add more info about fits here.
+
+        fitter_dict[self.fitter.name] = fit_info
+        self.image_info['save_info']['fitter'] = fitter_dict
+
         self.parseFitOutput(self.fit_output)
         self.updateFitBoxes()
 
