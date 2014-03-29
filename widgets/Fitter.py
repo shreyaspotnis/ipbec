@@ -235,6 +235,8 @@ class Fitter(QWidget, Ui_Fitter):
     def handleROIVChanged(self, new_roi):
         self.has_roi_v = True
         self.roi_v = new_roi
+        if self.initialized:
+            self.emitROIVdata()
 
     def handleROIIntChanged(self, new_roi):
         self.has_roi_int = True
@@ -250,4 +252,10 @@ class Fitter(QWidget, Ui_Fitter):
             self.horDataChanged.emit(data, fit)
 
     def emitROIVdata(self):
-        pass
+        if self.has_roi_v:
+            if self.imageTypeCombo.currentIndex() is 0 and self.is_fitted:
+                fit = imtools.getROISlice(self.fitted_data, self.roi_v)
+            else:
+                fit = None
+            data = imtools.getROISlice(self.emit_image, self.roi_v)
+            self.verDataChanged.emit(data, fit)
