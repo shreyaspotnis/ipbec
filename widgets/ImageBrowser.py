@@ -45,6 +45,8 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         self.watcher.directoryChanged.connect(
             self.handleWatcherDirectoryChanged)
         self.updateCommentBox()
+
+    def initialEmit(self):
         self.populateAndEmitImageInfo()
 
     def populateAndEmitImageInfo(self):
@@ -254,7 +256,8 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
             try:
                 with open(self.path_to_json_db, 'r') as f:
                     self.global_save_info = json.loads(f.read())
-            except IOError as (errno, strerror):
+            except IOError as err:
+                (errno, strerror) = err
                 # something bad wrong
                 msg = str(strerror)
             except ValueError as err:
@@ -341,6 +344,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
             return
 
         progress.setValue(4.0*self.image_list.n_images)
+        self.populateAndEmitImageInfo()
 
     def readAllRefImages(self, progress):
         progress.setLabelText('Reading Reference Images')
@@ -377,8 +381,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
 
         abs_shape = self.abs_images[0].shape
         # TODO: insert code to get actual mask
-        # mask = self.getROIMask(abs_shape)
-        mask = np.ones(abs_shape)
+        mask = self.getROIMask(abs_shape)
         self.is_cleaned = False
         for im in clt.generateCleanRefs(self.abs_images, self.basis, mask):
             progress.setValue(progress.value() + 1)
@@ -423,3 +426,15 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
             return None
         else:
             return (self.odMinSpin.value(), self.odMaxSpin.value())
+
+    def handleRoiChanged(self, new_roi):
+        """Slot: Changes ROI used for cleaning images."""
+        self.cleaning_roi = new_roi
+        print(self.cleaning_roi)
+
+    def getROIMask(self, abs_shape):
+        mask = np.ones(abs_shape)
+        if self.use_roi_while_cleaning:
+            roi = self.cleaning_roi[0]  # 0th component is roi list
+            mask[roi[0]:roi[2], roi[1]:roi[3]] = 0.0
+        return mask

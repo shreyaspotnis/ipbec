@@ -30,6 +30,7 @@ class RoiEditor(QWidget, Ui_RoiEditor):
         self.roiNameLabel.setText(name)
 
         iv = self.loadValues()
+        self.iv = iv
 
         self.updatePState(iv)
         self.updateWState(iv)
@@ -44,6 +45,11 @@ class RoiEditor(QWidget, Ui_RoiEditor):
         self.connectWSpinBoxes()
         self.connectROI()
 
+    def initialEmit(self):
+        """Emit initialization signals for other widgets."""
+        V = self.iv
+        self.roiChanged.emit((V, self.hvCombo.currentIndex()))
+
     def loadValues(self):
         self.settings.beginGroup('RoiEditor'+self.name)
         roi_string = str(self.settings.value('roi').toString())
@@ -52,7 +58,6 @@ class RoiEditor(QWidget, Ui_RoiEditor):
         else:
             initValues = [0, 0, 100, 100]
         self.settings.endGroup()
-        print(initValues)
         return initValues
 
     def saveSettings(self):

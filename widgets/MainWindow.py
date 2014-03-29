@@ -25,7 +25,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.connectSignalsToSlots()
 
         # all signals in place, send out the first image
-        self.image_browser.populateAndEmitImageInfo()
+        # self.image_browser.populateAndEmitImageInfo()
+        self.image_browser.initialEmit()
+        self.roi_editor_h.initialEmit()
+        self.roi_editor_v.initialEmit()
+        self.roi_editor_int.initialEmit()
 
     def createDocks(self):
         """Create all dock widgets and add them to DockArea."""
@@ -75,6 +79,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.image_browser.windowTitleChanged.connect(self.setWindowTitle)
         self.image_browser.imageChanged.connect(self.image_view.handleImageChanged)
         self.image_browser.imageChanged.connect(self.fitter.handleImageChanged)
+
+        self.roi_editor_int.roiChanged.connect(self.image_browser.handleRoiChanged)
 
     def loadSettings(self):
         """Load window state from self.settings"""
