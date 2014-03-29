@@ -106,6 +106,18 @@ def projector(ofVector, onVector, mask=None):
         return innerProduct(ofVector, onVector, mask) * onVector
 
 
+def getSensibleROI(roi, im_shape):
+    (x1, y1, x2, y2) = roi[0]
+    (xm, ym) = im_shape
+
+    x1c = max(int(min(x1, x2)), 0)
+    x2c = min(int(max(x1, x2)), xm)
+    y1c = max(int(min(y1, y2)), 0)
+    y2c = min(int(max(y1, y2)), ym)
+
+    return ([x1c, y1c, x2c, y2c], roi[1])
+
+
 def getROISlice(im, roi):
     """Returns a 1d slice of the image within the ROI.
 
@@ -117,22 +129,15 @@ def getROISlice(im, roi):
 
     axis is direction of averaging.
     """
-    (x1, y1, x2, y2) = roi[0]
-    (xm, ym) = im.shape
-
-    x1c = max(int(min(x1, x2)), 0)
-    x2c = min(int(max(x1, x2)), xm)
-    y1c = max(int(min(y1, y2)), 0)
-    y2c = min(int(max(y1, y2)), ym)
-
-    print(x1c, x2c, y1c, y2c)
+    roi1 = getSensibleROI(roi, im.shape)
+    (x1, y1, x2, y2) = roi1[0]
 
     if roi[1] is 0:
-        indices = np.arange(y1c, y2c)
+        indices = np.arange(y1, y2)
     else:
-        indices = np.arange(x1c, x2c)
+        indices = np.arange(x1, x2)
 
-    sub_im = im[x1c:x2c, y1c:y2c]
+    sub_im = im[x1:x2, y1:y2]
     print(indices.shape, sub_im.shape)
 
     return (indices, np.mean(sub_im, axis=roi[1]))
