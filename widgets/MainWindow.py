@@ -82,6 +82,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.roi_editor_int.roiChanged.connect(self.image_browser.handleRoiChanged)
 
+        self.image_view.doubleClicked.connect(self.roi_editor_h.centerROI)
+        self.image_view.doubleClicked.connect(self.roi_editor_v.centerROI)
+
     def loadSettings(self):
         """Load window state from self.settings"""
 
