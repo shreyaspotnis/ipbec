@@ -38,8 +38,11 @@ class ImageView(pg.ImageView):
         self.imageItem.singleClicked.connect(self.singleClicked)
         self.imageItem.doubleClicked.connect(self.doubleClicked)
 
-    def handleImageChanged(self, image_info):
-        im = image_info[image_info['image_type']]
+    # def handleMainImageChanged(self, image_info):
+    #     im = image_info[image_info['image_type']]
 
-        self.setImage(im)
-        # super(ImageView, self).setImage(im)
+    #     self.setImage(im)
+    #     # super(ImageView, self).setImage(im)
+
+    def handleImageChanged(self, new_image):
+        self.setImage(new_image)

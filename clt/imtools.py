@@ -1,7 +1,6 @@
 import numpy as np
 from matplotlib.pyplot import imread
 from repose_lru import lru_cache
-import matplotlib.pyplot as plt
 
 
 @lru_cache(maxsize=200)
@@ -105,3 +104,22 @@ def projector(ofVector, onVector, mask=None):
         return innerProduct(ofVector, onVector) * onVector
     else:
         return innerProduct(ofVector, onVector, mask) * onVector
+
+
+def getROISlice(im, roi):
+    """Returns a 1d slice of the image within the ROI.
+
+    roi is a list:
+    roi = [(x1, y1, x2, y2), axis]
+
+    (x1, y1) are the indices of the top left corner.
+    (x2, y2) for the bottom right. The index itself is not included.
+
+    axis is direction of averaging.
+    """
+    (x1, y1, x2, y2) = roi[0]
+    (xm, ym) = im.shape
+
+    return np.mean(im[max(min(x1, x2), 0):min(max(x1, x2), xm),
+                      max(min(y1, y2), 0):min(max(y1, y2), ym)],
+                   axis=roi[1])

@@ -86,13 +86,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionRefresh.triggered.connect(self.image_browser.handleRefreshAction)
 
         self.image_browser.windowTitleChanged.connect(self.setWindowTitle)
-        self.image_browser.imageChanged.connect(self.image_view.handleImageChanged)
+        # self.image_browser.imageChanged.connect(self.image_view.handleImageChanged)
         self.image_browser.imageChanged.connect(self.fitter.handleImageChanged)
 
         self.roi_editor_int.roiChanged.connect(self.image_browser.handleRoiChanged)
 
+        self.roi_editor_h.roiChanged.connect(self.fitter.handleROIHChanged)
+        self.roi_editor_v.roiChanged.connect(self.fitter.handleROIVChanged)
+        self.roi_editor_int.roiChanged.connect(self.fitter.handleROIIntChanged)
+
         self.image_view.doubleClicked.connect(self.roi_editor_h.centerROI)
         self.image_view.doubleClicked.connect(self.roi_editor_v.centerROI)
+
+        self.fitter.imageChanged.connect(self.image_view.handleImageChanged)
 
     def loadSettings(self):
         """Load window state from self.settings"""

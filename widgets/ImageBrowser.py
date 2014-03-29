@@ -430,7 +430,6 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
     def handleRoiChanged(self, new_roi):
         """Slot: Changes ROI used for cleaning images."""
         self.cleaning_roi = new_roi
-        print(self.cleaning_roi)
 
     def getROIMask(self, abs_shape):
         mask = np.ones(abs_shape)
