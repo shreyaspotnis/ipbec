@@ -205,5 +205,76 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>guessButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Fitter</receiver>
+   <slot>handleGuessClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>28</x>
+     <y>63</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>3</x>
+     <y>71</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fitButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Fitter</receiver>
+   <slot>handleFitClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>164</x>
+     <y>67</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>115</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fitToGuessButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Fitter</receiver>
+   <slot>handleFitToGuessClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>161</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>continueButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Fitter</receiver>
+   <slot>handleContinueClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>268</x>
+     <y>38</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>193</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>handleGuessClicked()</slot>
+  <slot>handleFitClicked()</slot>
+  <slot>handleContinueClicked()</slot>
+  <slot>handleFitToGuessClicked()</slot>
+ </slots>
 </ui>

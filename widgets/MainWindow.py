@@ -58,8 +58,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.dock_roi_v = Dock('ROIV', widget=self.roi_editor_v)
         self.dock_roi_int = Dock('ROI Int', widget=self.roi_editor_int)
 
-        self.dock_roi_plot_h = Dock('ROIH', widget=self.roi_plot_h)
-        self.dock_roi_plot_v = Dock('ROIV', widget=self.roi_plot_v)
+        self.dock_roi_plot_h = Dock('ROIH Plot', widget=self.roi_plot_h)
+        self.dock_roi_plot_v = Dock('ROIV Plot', widget=self.roi_plot_v)
 
         self.dock_area.addDock(self.dock_image_view, position='top')
         self.dock_area.addDock(self.dock_image_browser, position='right',
@@ -103,10 +103,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         dock_string = str(self.settings.value('dockstate').toString())
         if dock_string is not "":
             dock_state = eval(dock_string)
-            try:
-                self.dock_area.restoreState(dock_state)
-            except:
-                pass
+            self.dock_area.restoreState(dock_state)
         self.settings.endGroup()
 
         self.restoreGeometry(geometry)

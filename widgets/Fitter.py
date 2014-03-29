@@ -24,5 +24,17 @@ class Fitter(QWidget, Ui_Fitter):
     def loadSettings(self):
         pass
 
-    def handleImageChanged(self, new_dict):
-        pass
+    def handleImageChanged(self, new_image_info):
+        self.image_info = new_image_info
+
+    def handleGuessClicked(self):
+        print('guess')
+
+    def handleFitClicked(self):
+        print('fit')
+
+    def handleFitToGuessClicked(self):
+        print('fittoguess')
+
+    def handleContinueClicked(self):
+        print('continue')
