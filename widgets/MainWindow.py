@@ -1,6 +1,6 @@
 from PyQt4 import uic
 from pyqtgraph.dockarea import DockArea, Dock
-from widgets import ImageView, ImageBrowser, Fitter, RoiEditor
+from widgets import ImageView, ImageBrowser, Fitter, RoiEditor, Plot1d
 
 Ui_MainWindow, QMainWindow = uic.loadUiType("ui/MainWindow.ui")
 
@@ -46,6 +46,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.roi_editor_int = RoiEditor(self.settings,
                                         self.image_view, self, name='ROI Int',
                                         pen=(1, 2), axis=1)
+        self.roi_plot_h = Plot1d(parent=self, title='ROI H')
+        self.roi_plot_v = Plot1d(parent=self, title='ROI V')
 
         # Create docks for all widgets
         self.dock_image_view = Dock('Image View', widget=self.image_view)
@@ -55,6 +57,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.dock_roi_h = Dock('ROIH', widget=self.roi_editor_h)
         self.dock_roi_v = Dock('ROIV', widget=self.roi_editor_v)
         self.dock_roi_int = Dock('ROI Int', widget=self.roi_editor_int)
+
+        self.dock_roi_plot_h = Dock('ROIH', widget=self.roi_plot_h)
+        self.dock_roi_plot_v = Dock('ROIV', widget=self.roi_plot_v)
 
         self.dock_area.addDock(self.dock_image_view, position='top')
         self.dock_area.addDock(self.dock_image_browser, position='right',
@@ -67,6 +72,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                relativeTo=self.dock_roi_h)
         self.dock_area.addDock(self.dock_roi_int, position='below',
                                relativeTo=self.dock_roi_v)
+        self.dock_area.addDock(self.dock_roi_plot_h, position='below',
+                               relativeTo=self.dock_image_view)
+        self.dock_area.addDock(self.dock_roi_plot_v, position='right',
+                               relativeTo=self.dock_roi_plot_h)
 
     def initAfterCreatingDockWidgets(self):
         self.setWindowTitle(self.image_browser.current_directory)
