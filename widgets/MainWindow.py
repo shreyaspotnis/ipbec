@@ -1,6 +1,7 @@
 from PyQt4 import uic
 from pyqtgraph.dockarea import DockArea, Dock
 from widgets import ImageView, ImageBrowser, Fitter, RoiEditor, Plot1d
+from widgets import Analyzer
 
 Ui_MainWindow, QMainWindow = uic.loadUiType("ui/MainWindow.ui")
 
@@ -49,6 +50,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.roi_plot_h = Plot1d(parent=self, title='ROI H')
         self.roi_plot_v = Plot1d(parent=self, title='ROI V')
 
+        self.analyzer = Analyzer(self.settings, parent=self)
+
         # Create docks for all widgets
         self.dock_image_view = Dock('Image View', widget=self.image_view)
         self.dock_image_browser = Dock('Image Browser',
@@ -60,6 +63,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.dock_roi_plot_h = Dock('ROIH Plot', widget=self.roi_plot_h)
         self.dock_roi_plot_v = Dock('ROIV Plot', widget=self.roi_plot_v)
+        self.dock_analyzer = Dock('Analyze', widget=self.analyzer)
 
         self.dock_area.addDock(self.dock_image_view, position='top')
         self.dock_area.addDock(self.dock_image_browser, position='right',
@@ -76,6 +80,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                relativeTo=self.dock_image_view)
         self.dock_area.addDock(self.dock_roi_plot_v, position='right',
                                relativeTo=self.dock_roi_plot_h)
+        self.dock_area.addDock(self.dock_analyzer, position='top',
+                               relativeTo=self.dock_image_browser)
 
     def initAfterCreatingDockWidgets(self):
         self.setWindowTitle(self.image_browser.current_directory)
@@ -88,6 +94,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.image_browser.windowTitleChanged.connect(self.setWindowTitle)
         # self.image_browser.imageChanged.connect(self.image_view.handleImageChanged)
         self.image_browser.imageChanged.connect(self.fitter.handleImageChanged)
+        self.image_browser.imageChanged.connect(self.analyzer.handleImageChanged)
 
         self.roi_editor_int.roiChanged.connect(self.image_browser.handleRoiChanged)
 
@@ -101,6 +108,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.fitter.imageChanged.connect(self.image_view.handleImageChanged)
         self.fitter.horDataChanged.connect(self.roi_plot_h.handleDataChanged)
         self.fitter.verDataChanged.connect(self.roi_plot_v.handleDataChanged)
+        self.fitter.doneFitting.connect(self.analyzer.handleDoneFitting)
 
     def loadSettings(self):
         """Load window state from self.settings"""

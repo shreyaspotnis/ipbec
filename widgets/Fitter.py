@@ -20,7 +20,7 @@ class Fitter(QWidget, Ui_Fitter):
     verDataChanged = pyqtSignal(object, object, object)
 
     # connect to analyzer
-    doneFitting = pyqtSignal()
+    doneFitting = pyqtSignal(object)
 
     def __init__(self, settings, parent):
         super(Fitter, self).__init__(parent=parent)
@@ -140,7 +140,7 @@ class Fitter(QWidget, Ui_Fitter):
         self.updateFitBoxes()
 
         self.is_fitted = True
-        self.doneFitting.emit()
+        self.doneFitting.emit(self.fitter.name)
 
     def updateFitBoxes(self):
         """Updates fit spinboxes when fitter fits to data."""
