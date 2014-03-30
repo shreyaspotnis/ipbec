@@ -115,7 +115,6 @@ class Fitter(QWidget, Ui_Fitter):
         else:
             fitter_dict = {}
 
-        print(fitter_dict)
         fit_info = {}
         parms = {}
         errors = {}

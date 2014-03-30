@@ -74,8 +74,10 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                                           od_minmax=self.getODMinMax())
         d['image_type'] = self.getImageType()
         key = d['path_to_abs']
+        if key not in self.global_save_info:
+            self.global_save_info[key] = {}
         d['save_info'] = self.global_save_info[key]
-        d['save_info']['comment'] = str(self.commentTextEdit.toPlainText())
+        # d['save_info']['comment'] = str(self.commentTextEdit.toPlainText())
 
         self.imageChanged.emit(d)
 
@@ -116,6 +118,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         TODO: write better description of this function.
         """
         comment = str(self.commentTextEdit.toPlainText())
+        print('Current image index', self.current_image_index)
         key = self.image_list.absorption_files[self.current_image_index]
         # if key not in self.global_save_info:
         #     self.global_save_info[key] = {}
@@ -290,6 +293,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                     self.main_window.close()
 
     def saveSettings(self):
+        self.saveImageInfo()
         self.settings.beginGroup('imagebrowser')
         self.settings.setValue('current_directory', self.current_directory)
         self.settings.setValue('path_to_dark_file', self.path_to_dark_file)
