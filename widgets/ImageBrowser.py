@@ -1,13 +1,12 @@
 from PyQt4 import uic
-from PyQt4.QtGui import QFileDialog, QMessageBox, QApplication, QProgressDialog
+from PyQt4.QtGui import QFileDialog, QMessageBox, QProgressDialog
 from PyQt4.QtCore import pyqtSignal, QFileSystemWatcher, Qt
 import clt
 import json
 import numpy as np
-import matplotlib.pyplot as plt
 import time
 import os
-import pprint
+import os.path as path
 
 Ui_ImageBrowser, QWidget = uic.loadUiType("ui/ImageBrowser.ui")
 
@@ -118,7 +117,6 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         TODO: write better description of this function.
         """
         comment = str(self.commentTextEdit.toPlainText())
-        print('Current image index', self.current_image_index)
         key = self.image_list.absorption_files[self.current_image_index]
         # if key not in self.global_save_info:
         #     self.global_save_info[key] = {}
@@ -221,6 +219,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                 self.useCleanedCheck.setCheckState(0)
 
                 self.populateAndEmitImageInfo()
+                self.purgeNonExistentEntries()
 
     def setCurrentDirectory(self, new_directory):
         """Sets the current directory.
@@ -442,3 +441,13 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
             roi = self.cleaning_roi[0]  # 0th component is roi list
             mask[roi[0]:roi[2], roi[1]:roi[3]] = 0.0
         return mask
+
+    def purgeNonExistentEntries(self):
+        """Scan JSON database for files in current directory. If database has
+        entries for which there are no files, then delete those entries."""
+        for key in self.global_save_info.keys():
+            if path.dirname(key) == self.current_directory:
+                if not path.isfile(key):
+                    # remove entry if this file does not exis
+                    del self.global_save_info[key]
+                    print('deleting: ' + key)

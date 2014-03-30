@@ -57,7 +57,6 @@ def generateBasis(ref_images):
     """Generator for a list of orthonormal basis images based on images
     supplied in ref_images."""
     for i, rI in enumerate(ref_images):
-        print(i)
         if i is 0:
             basis = [ref_images[0]]
         else:
