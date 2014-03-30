@@ -1,6 +1,7 @@
 from PyQt4.QtGui import QWidget, QGridLayout, QLabel, QDoubleSpinBox
 import numpy as np
 from clt import imtools
+from clt import fittools
 
 
 class Analyzer(QWidget):
@@ -23,6 +24,7 @@ class Analyzer(QWidget):
         self.has_roi_h = False
         self.has_roi_v = False
         self.has_roi_int = False
+        self.has_fitted_stuff = False
 
     def initUI(self):
         self.grid = QGridLayout(self)
@@ -58,10 +60,13 @@ class Analyzer(QWidget):
         if not self.initialized:
             self.initUI()
             self.initialized = True
-        self.updateOutputValues(fit_type=None)
+        self.has_fitted_stuff = False
+        self.updateOutputValues()
 
     def handleDoneFitting(self, fit_type):
-        self.updateOutputValues(fit_type=fit_type)
+        self.has_fitted_stuff = True
+        self.fit_type = fit_type
+        self.updateOutputValues()
 
     def handleInputValueChanged(self, new_value):
         self.inputValues = [float(sp.value()) for sp in self.inputBoxes]
@@ -97,11 +102,12 @@ class Analyzer(QWidget):
     def handleROIIntChanged(self, new_roi):
         self.has_roi_int = True
         self.roi_int = new_roi
-        self.updateOutputValues(fit_type=None)
+        self.updateOutputValues()
 
-    def updateOutputValues(self, fit_type=None):
+    def updateOutputValues(self):
         (tof, ps, det, ex_time, Ip, fx, fy, fz) = self.inputValues
         im = self.image_info[self.image_info['image_type']]
+
 
         kb = 1.3806e-23         # (SI) Boltzman constant
         m_rb = 1.443e-25         # (kg) Mass of Rubiduim87
@@ -112,6 +118,7 @@ class Analyzer(QWidget):
         gamma = 6.0666  # MHz
 
         det_hl = 2.0*det/gamma  # deturning in half linewidths
+        # ps = pixel size in microns, 1e-8 converts to cm^2
         OD_to_atom_number = ps**2*1e-8*(1 + det_hl**2)/sigma_23
 
         if self.has_roi_int:
@@ -120,45 +127,58 @@ class Analyzer(QWidget):
             ODsum = 0
         Ni = ODsum*OD_to_atom_number
 
-        if fit_type is None:
+        if self.has_fitted_stuff is False:
             # just update integrated atom number
             self.outputValues[1] = Ni
             self.outputValueLabels[1].setText(self.OutputFormats[1] % Ni)
             return
 
-        # if fit_type == 'Gauss2D':
-        #     (height, xc, yc, xw, yw, offset) = fitParms
-        #     # find integrated OD_i, OD_i = integral (OD dx dy)
-        #     OD_i = height*(2.0*pi*xw*yw)
-        #     Nf = OD_i*(1 + det_hl**2)/sigma_23
-        #     T_H = ((xw*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6
-        #     T_V = ((yw*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6
-        #     bec_fraction = 0.0
-        #     mu = 0  # don't caluclate for Gauss2D
+        # else update everything
 
-        # elif fit_type == 'Thomas Fermi 2D':
-        #     (height, xc, yc, rx, ry, offset) = fitParms
-        #     OD_i = height*(pi*rx*ry/2.0)
-        #     T_H = 0
-        #     T_V = 0
-        #     bec_fraction = 1.0
-        #     mu = 0  # TODO: calculate mu later on
+        save_dict = self.image_info['save_info']
+        fit_dict = save_dict['fitter'][self.fit_type]
+        fit_parms = fittools.dictToList(fit_dict['parms'], self.fit_type)
 
-        # elif fit_type == 'TF + Gauss2D':
-        #     (h_tf, h_g, cx, cy, rx, ry, wx, wy, offset) = fitParms
-        #     OD_tf = h_tf*(pi*rx*ry/2.0)
-        #     OD_gauss = h_g*(2.0*pi*wx*wy)
-        #     OD_i = OD_tf + OD_gauss
-        #     T_H = ((wx*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6
-        #     T_V = ((wy*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6
-        #     bec_fraction = OD_tf/OD_i
-        #     mu = 0  # calculate mu later on
+        if self.fit_type == 'Gauss2D':
+            (height, xc, yc, xw, yw, offset) = fit_parms
+            # find integrated OD_i, OD_i = integral (OD dx dy)
+            OD_i = height*(2.0*pi*xw*yw)
+            Nf = OD_i*(1 + det_hl**2)/sigma_23
+            T_H = ((xw*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6
+            T_V = ((yw*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6
+            bec_fraction = 0.0
+            mu = 0  # don't caluclate for Gauss2D
 
-        # # do your calculations here
-        # # ps = pixel size in microns, 1e-8 converts to cm^2
-        # Nf = OD_i*OD_to_atom_number
+        elif self.fit_type == 'Thomas Fermi 2D':
+            (height, xc, yc, rx, ry, offset) = fit_parms
+            OD_i = height*(pi*rx*ry/2.0)
+            T_H = 0
+            T_V = 0
+            bec_fraction = 1.0
+            mu = 0  # TODO: calculate mu later on
 
-        # self.outputValues = [Nf, Ni, T_H, T_V, 0, 0, bec_fraction, mu]
-        # for ov, ovl, ovf in zip(self.outputValues, self.outputValueLabels,
-        #                         self.OutputFormats):
-        #     ovl.setText(ovf % ov)
+        elif self.fit_type == 'TF + Gauss2D':
+            (h_tf, h_g, cx, cy, rx, ry, wx, wy, offset) = fit_parms
+            OD_tf = h_tf*(pi*rx*ry/2.0)
+            OD_gauss = h_g*(2.0*pi*wx*wy)
+            OD_i = OD_tf + OD_gauss
+            T_H = ((wx*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6
+            T_V = ((wy*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6
+            bec_fraction = OD_tf/OD_i
+            mu = 0  # calculate mu later on
+
+        # do your calculations here
+        Nf = OD_i*OD_to_atom_number
+
+        self.outputValues = [Nf, Ni, T_H, T_V, 0, 0, bec_fraction, mu]
+        for ov, ovl, ovf in zip(self.outputValues, self.outputValueLabels,
+                                self.OutputFormats):
+            ovl.setText(ovf % ov)
+
+        # Save all analyzed stuff
+
+        if 'analyzer' not in save_dict:
+            save_dict['analyzer'] = {}
+        sub_dict = save_dict['analyzer'][self.fit_type] = {}
+        sub_dict['output'] = dict(zip(self.Outputs, self.outputValues))
+        sub_dict['inputs'] = dict(zip(self.Inputs, self.inputValues))

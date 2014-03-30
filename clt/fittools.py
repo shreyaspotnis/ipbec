@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import optimize
 import time
+import pprint
 
 
 class Fitter(object):
@@ -261,3 +262,12 @@ class DoubleGauss2D(Gauss2D):
 
 
 fittypes = [Gauss2D, TF2D, TFGauss2D, DoubleGauss2D]
+
+
+def dictToList(fit_parms_dict, fit_type):
+    for ft in fittypes:
+        if ft.name == fit_type:
+            l = [fit_parms_dict[key] for key in ft.parameterNames]
+            return l
+    else:
+        raise ValueError(fit_type + ' is not a valid fit type')
