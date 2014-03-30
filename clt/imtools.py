@@ -140,3 +140,10 @@ def getROISlice(im, roi):
     sub_im = im[x1:x2, y1:y2]
 
     return (indices, np.mean(sub_im, axis=roi[1]))
+
+
+def getSubImage(im, roi):
+    """Returns sub image within the ROI."""
+    roi1 = getSensibleROI(roi, im.shape)
+    (x1, y1, x2, y2) = roi1[0]
+    return im[x1:x2, y1:y2]

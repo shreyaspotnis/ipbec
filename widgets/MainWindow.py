@@ -99,8 +99,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.roi_editor_int.roiChanged.connect(self.image_browser.handleRoiChanged)
 
         self.roi_editor_h.roiChanged.connect(self.fitter.handleROIHChanged)
+        self.roi_editor_h.roiChanged.connect(self.analyzer.handleROIHChanged)
         self.roi_editor_v.roiChanged.connect(self.fitter.handleROIVChanged)
+        self.roi_editor_v.roiChanged.connect(self.analyzer.handleROIVChanged)
         self.roi_editor_int.roiChanged.connect(self.fitter.handleROIIntChanged)
+        self.roi_editor_int.roiChanged.connect(self.analyzer.handleROIIntChanged)
 
         self.image_view.doubleClicked.connect(self.roi_editor_h.centerROI)
         self.image_view.doubleClicked.connect(self.roi_editor_v.centerROI)
@@ -143,6 +146,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.roi_editor_int.saveSettings()
         self.roi_editor_v.saveSettings()
         self.roi_editor_h.saveSettings()
+        self.analyzer.saveSettings()
         super(MainWindow, self).closeEvent(event)
 
     def setWindowTitle(self, newTitle=''):
