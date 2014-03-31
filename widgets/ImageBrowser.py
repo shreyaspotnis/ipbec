@@ -131,6 +131,8 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         if key not in self.global_save_info:
             self.commentTextEdit.setPlainText('')
         else:
+            if 'comment' not in self.global_save_info[key]:
+                self.global_save_info[key]['comment'] = ''
             comment = self.global_save_info[key]['comment']
             self.commentTextEdit.setPlainText(comment)
 
@@ -155,7 +157,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                     self.image_list.updateFileList(self.current_directory)
                 else:
                     self.image_list.updateFileList()
-            except ImageListError as err:
+            except clt.ImageListError as err:
                 info = (' Would you like to open a different directory?'
                         ' Press cancel to quit')
                 pressed = QMessageBox.question(self, 'Error opening directory',
@@ -234,7 +236,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
     def loadSettings(self):
         self.settings.beginGroup('imagebrowser')
         self.setCurrentDirectory(
-            str(self.settings.value('current_directory').toString()))
+            str(self.settings.value('current_directory','./').toString()))
         self.path_to_dark_file = str(
             self.settings.value('path_to_dark_file',
             self.path_to_dark_file).toString())

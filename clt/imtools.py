@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib.pyplot import imread
 from repose_lru import lru_cache
+import Image
 
 
 @lru_cache(maxsize=200)
@@ -12,11 +13,16 @@ def readImageFile(path):
         calls to the function with the same filename will not result in
         disk IO.
         """
-        Image = imread(path).T
-        # most significant bit of all pixel data is 1, so we subtract it
-        # no idea why, just found it by accident
-        return np.array(Image - 2 ** 15, dtype=float)
+        # Image = imread(path).T
+        # # most significant bit of all pixel data is 1, so we subtract it
+        # # no idea why, just found it by accident
+        # return np.array(Image - 2 ** 15, dtype=float)
 
+        # this works in windows
+        im = Image.open(path)
+        im_array = np.array(im.getdata()) + 2 ** 15
+        im_re = np.reshape(im_array, (255 , 256)).T
+        return np.array(im_re, dtype=float)
 
 def dividedImage(abs_image_, ref_image_, dark_image=None,
                  od_minmax=None):
