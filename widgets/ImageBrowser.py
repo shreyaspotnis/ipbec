@@ -8,6 +8,8 @@ import time
 import os
 import os.path as path
 
+from widgets import SaveDialog
+
 Ui_ImageBrowser, QWidget = uic.loadUiType("ui/ImageBrowser.ui")
 
 
@@ -451,3 +453,8 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                     # remove entry if this file does not exis
                     del self.global_save_info[key]
                     print('deleting: ' + key)
+
+
+    def handleSaveAnalysis(self):
+        save_dialog = SaveDialog(self.settings, self.global_save_info, self.image_list)
+        save_dialog.exec_()

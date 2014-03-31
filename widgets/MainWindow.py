@@ -90,6 +90,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionOpen_Directory.triggered.connect(self.image_browser.handleOpenDirectoryAction)
         self.actionDark_File.triggered.connect(self.image_browser.handleDarkFileAction)
         self.actionRefresh.triggered.connect(self.image_browser.handleRefreshAction)
+        self.actionSave.triggered.connect(self.image_browser.handleSaveAnalysis)
 
         self.image_browser.windowTitleChanged.connect(self.setWindowTitle)
         # self.image_browser.imageChanged.connect(self.image_view.handleImageChanged)

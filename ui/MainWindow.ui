@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -31,6 +31,8 @@
     <addaction name="actionDark_File"/>
     <addaction name="separator"/>
     <addaction name="actionRefresh"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -81,6 +83,14 @@
    </property>
    <property name="text">
     <string>Use ROI While Cleaning</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save Analysis</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>

@@ -263,6 +263,10 @@ class DoubleGauss2D(Gauss2D):
 
 fittypes = [Gauss2D, TF2D, TFGauss2D, DoubleGauss2D]
 
+fit_types_dict = {}
+for f in fittypes:
+    fit_types_dict[f.name] = f
+
 
 def dictToList(fit_parms_dict, fit_type):
     for ft in fittypes:

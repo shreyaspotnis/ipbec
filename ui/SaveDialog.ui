@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>saveDialog</class>
+ <widget class="QDialog" name="saveDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1049</width>
+    <height>656</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Save fitted and analyzed data</string>
+  </property>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>20</y>
+     <width>471</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QComboBox" name="fitTypeCombo"/>
+    </item>
+    <item row="0" column="3">
+     <widget class="QPushButton" name="saveButton">
+      <property name="text">
+       <string>Save</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QPushButton" name="selectNoneButton">
+      <property name="text">
+       <string>Select None</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QPushButton" name="selectAllButton">
+      <property name="text">
+       <string>Select All</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4">
+     <widget class="QPushButton" name="cancelButton">
+      <property name="text">
+       <string>Close</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="gridLayoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>70</y>
+     <width>191</width>
+     <height>551</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="cbgrid"/>
+  </widget>
+  <widget class="QLabel" name="errorLabel">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>70</y>
+     <width>751</width>
+     <height>541</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Errors</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>fitTypeCombo</sender>
+   <signal>currentIndexChanged(QString)</signal>
+   <receiver>saveDialog</receiver>
+   <slot>handleFitTypeChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>37</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>27</x>
+     <y>40</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selectAllButton</sender>
+   <signal>clicked()</signal>
+   <receiver>saveDialog</receiver>
+   <slot>handleSelectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>194</x>
+     <y>26</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>568</x>
+     <y>21</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selectNoneButton</sender>
+   <signal>clicked()</signal>
+   <receiver>saveDialog</receiver>
+   <slot>handleSelectNone()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>266</x>
+     <y>31</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>608</x>
+     <y>47</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cancelButton</sender>
+   <signal>clicked()</signal>
+   <receiver>saveDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>423</x>
+     <y>37</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>477</x>
+     <y>549</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>saveButton</sender>
+   <signal>clicked()</signal>
+   <receiver>saveDialog</receiver>
+   <slot>handleSave()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>334</x>
+     <y>28</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>494</x>
+     <y>610</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>handleFitTypeChanged()</slot>
+  <slot>handleSelectAll()</slot>
+  <slot>handleSelectNone()</slot>
+  <slot>handleSave()</slot>
+ </slots>
+</ui>
