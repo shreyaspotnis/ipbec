@@ -119,6 +119,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         TODO: write better description of this function.
         """
         comment = str(self.commentTextEdit.toPlainText())
+        print(self.current_image_index)
         key = self.image_list.absorption_files[self.current_image_index]
         # if key not in self.global_save_info:
         #     self.global_save_info[key] = {}
@@ -149,7 +150,6 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
 
         If an error occured, gives the user the option to select a different
         directory."""
-
         done = False
         while not done:
             try:
@@ -210,8 +210,10 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                 else:
                     # if we have a new folder, then set the index to 0
                     ci = 0
+                self.current_image_index = ci
                 self.imageListCombo.setCurrentIndex(ci)
                 self.imageIndexSpin.setValue(ci)
+                
 
                 # connect slot again once done adding
                 self.imageListCombo.currentIndexChanged.connect(

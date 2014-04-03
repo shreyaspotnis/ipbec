@@ -21,6 +21,7 @@ class SaveDialog(QDialog, Ui_SaveDialog):
         self.setupUi(self)
         self.added_check_boxes = False
         self.save_folder = './'
+        self.loadSettings()
 
         self.fitNames = [f.name for f in fittools.fittypes]
         self.fitTypeCombo.addItems(self.fitNames)
@@ -85,12 +86,14 @@ class SaveDialog(QDialog, Ui_SaveDialog):
                     header.append(label)
         header_string = string.join(header, '\t')
 
+        print(self.save_folder)
         file_name = str(QFileDialog.getSaveFileName(self, caption='Save as...',
                                                 directory=self.save_folder))
         if file_name != '':
             np.savetxt(file_name, data_full, delimiter='\t',
                        header=header_string)
             self.save_folder = path.dirname(file_name)
+            self.saveSettings()
 
     def findErrors(self):
         errors = False
@@ -131,3 +134,13 @@ class SaveDialog(QDialog, Ui_SaveDialog):
         final_string = string.join([no_info_string, no_fit_string, no_an_string], '\n\n')
         self.errorLabel.setText(final_string)
         return errors
+
+    def loadSettings(self):
+        self.settings.beginGroup('savedialog')
+        self.save_folder = str(self.settings.value('save_folder', './').toString())
+        self.settings.endGroup()
+
+    def saveSettings(self):
+        self.settings.beginGroup('savedialog')
+        self.settings.setValue('save_folder', self.save_folder)
+        self.settings.endGroup()
