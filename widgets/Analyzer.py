@@ -131,12 +131,12 @@ class Analyzer(QWidget):
         if self.has_roi_h:
             ODsum_h = np.sum(imtools.getSubImage(im, self.roi_h))
         else:
-            ODsum_h = 1e-30 
+            ODsum_h = 1e-30
 
         if self.has_roi_v:
             ODsum_v = np.sum(imtools.getSubImage(im, self.roi_v))
         else:
-            ODsum_v = 1e-30 
+            ODsum_v = 1e-30
 
         Ni = ODsum*OD_to_atom_number
         Nih = ODsum_h*OD_to_atom_number
@@ -187,6 +187,15 @@ class Analyzer(QWidget):
             T_V = ((wy*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6
             bec_fraction = OD_tf/OD_i
             mu = 0  # calculate mu later on
+
+        elif self.fit_type == 'TF Int':
+            (height, xc, yc, rx, ry, offset) = fit_parms
+            OD_i = height*(pi*rx*ry/2.0)
+            OD_i = height*(2.0*pi*rx*ry/5.0)
+            T_H = 0
+            T_V = 0
+            bec_fraction = 1.0
+            mu = 0  # TODO: calculate mu later on
 
         # do your calculations here
         Nf = OD_i*OD_to_atom_number

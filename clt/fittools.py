@@ -179,6 +179,30 @@ class TF2D(Gauss2D):
                              - ((y-cy) / ry) ** 2)) + offset)
 
 
+class TF2DInt(Gauss2D):
+    """Fitter for integrated Thomas Fermi profile. This is a 3d inverted
+    parabola integrated along the z axis. The only difference between this
+    and the TF2D class is the parabola is raised to a power 3/2."""
+
+    name = 'TF Int'
+    parameterNames = ['Height', 'X Center', 'Y Center', 'X Radius',
+                      'Y Radius', 'Offset']
+
+    def __init__(self, im=None):
+        super(TF2DInt, self).__init__(im)
+
+    def fitFunction(self, height, cx, cy, rx, ry, offset):
+        """Returns a gaussian function with the given parameters"""
+
+        def isG0(a):
+            """Zeroes all elements of the matrix less than 0."""
+            return a * (a > 0)
+
+        return lambda x, y: (height * isG0(1 - ((x - cx) / rx)**2 -
+                                           ((y-cy) / ry) ** 2) ** 1.5
+                             + offset)
+
+
 class TFGauss2D(Gauss2D):
     """Fitter class for a 2D Thomas Fermi profile"""
 
@@ -261,7 +285,7 @@ class DoubleGauss2D(Gauss2D):
                                          + ((cy2 - y)/wy2)**2)/2.0))
 
 
-fittypes = [Gauss2D, TF2D, TFGauss2D, DoubleGauss2D]
+fittypes = [Gauss2D, TF2D, TFGauss2D, DoubleGauss2D, TF2DInt]
 
 fit_types_dict = {}
 for f in fittypes:
