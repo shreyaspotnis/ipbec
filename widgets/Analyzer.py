@@ -12,9 +12,12 @@ class Analyzer(QWidget):
               'fz(Hz)']
     Outputs = ['Fitted Atom Number', 'Integrated Atom Number', 'H Temp(uK)',
                'V Temp(uK)', 'Peak Density(cm^-3)', 'Collision Rate',
-               'BEC Fraction', 'Chemical potential(nK)', 'Int Number H', 'Int Number V', 'NH/(NH+NV)']
+               'BEC Fraction', 'Chemical potential(nK)', 'Int Number H',
+               'Int Number V', 'NH/(NH+NV)', '<x>', '<x2>', '<delx>',
+               '<y>', '<y2>', '<dely>']
     OutputFormats = ['%.2e', '%.2e', '%.2g', '%.2g', '%g', '%g', '%.3g',
-                     '%.1g', '%.2e', '%.2e', '%.3e']
+                     '%.1g', '%.2e', '%.2e', '%.3e', '%3.1f', '%3.1f', '%3.1f',
+                     '%3.1f', '%3.1f', '%3.1f', ]
 
     def __init__(self, settings, parent=None):
         super(Analyzer, self).__init__(parent)
@@ -125,8 +128,17 @@ class Analyzer(QWidget):
 
         if self.has_roi_int:
             ODsum = np.sum(imtools.getSubImage(im, self.roi_int))
+            (x_ex, x2_ex, delx_ex,
+             y_ex, y2_ex, dely_ex) = imtools.getExpectationValues(im,
+                                                                  self.roi_int)
         else:
             ODsum = 1e-30
+            x_ex = 0
+            x2_ex = 0
+            y_ex = 0
+            y2_ex = 0
+            delx_ex = 0
+            dely_ex = 0
 
         if self.has_roi_h:
             ODsum_h = np.sum(imtools.getSubImage(im, self.roi_h))
@@ -144,14 +156,13 @@ class Analyzer(QWidget):
         Nh_over_Nv = Nih / (Nih + Niv)
 
         if self.has_fitted_stuff is False:
-            # just update integrated atom number
-            self.outputValues[1] = Ni
-            self.outputValues[8] = Nih
-            self.outputValues[9] = Niv
-            self.outputValueLabels[1].setText(self.OutputFormats[1] % Ni)
-            self.outputValueLabels[8].setText(self.OutputFormats[8] % Nih)
-            self.outputValueLabels[9].setText(self.OutputFormats[9] % Niv)
-            self.outputValueLabels[10].setText(self.OutputFormats[10] % Nh_over_Nv)
+            # update all values that do not require fitted data
+            indices = [1, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+            values = [Ni, Nih, Niv, Nh_over_Nv, x_ex, x2_ex, delx_ex, y_ex,
+                      y2_ex, dely_ex]
+            for i, v in zip(indices, values):
+                self.outputValues[i] = v
+                self.outputValueLabels[i].setText(self.OutputFormats[i] % v)
             return
 
         # else update everything
@@ -200,7 +211,9 @@ class Analyzer(QWidget):
         # do your calculations here
         Nf = OD_i*OD_to_atom_number
 
-        self.outputValues = [Nf, Ni, T_H, T_V, 0, 0, bec_fraction, mu, Nih, Niv, Nh_over_Nv]
+        self.outputValues = [Nf, Ni, T_H, T_V, 0, 0, bec_fraction, mu, Nih,
+                             Niv, Nh_over_Nv, x_ex, x2_ex, delx_ex, y_ex,
+                             y2_ex, dely_ex]
         for ov, ovl, ovf in zip(self.outputValues, self.outputValueLabels,
                                 self.OutputFormats):
             ovl.setText(ovf % ov)

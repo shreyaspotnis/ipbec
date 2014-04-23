@@ -1,7 +1,10 @@
 import numpy as np
 from matplotlib.pyplot import imread
 from repose_lru import lru_cache
-import Image
+from sys import platform as _platform
+
+if _platform == "win32":
+    import Image
 
 
 @lru_cache(maxsize=200)
@@ -13,16 +16,18 @@ def readImageFile(path):
         calls to the function with the same filename will not result in
         disk IO.
         """
-        # Image = imread(path).T
-        # # most significant bit of all pixel data is 1, so we subtract it
-        # # no idea why, just found it by accident
-        # return np.array(Image - 2 ** 15, dtype=float)
+        if _platform == "linux" or _platform == "linux2":
+            im = imread(path).T
+            # most significant bit of all pixel data is 1, so we subtract it
+            # no idea why, just found it by accident
+            return np.array(im - 2 ** 15, dtype=float)
+        else:
+            # this works in windows
+            im = Image.open(path)
+            im_array = np.array(im.getdata()) + 2 ** 15
+            im_re = np.reshape(im_array, (255, 256)).T
+            return np.array(im_re, dtype=float)
 
-        # this works in windows
-        im = Image.open(path)
-        im_array = np.array(im.getdata()) + 2 ** 15
-        im_re = np.reshape(im_array, (255 , 256)).T
-        return np.array(im_re, dtype=float)
 
 def dividedImage(abs_image_, ref_image_, dark_image=None,
                  od_minmax=None):
@@ -152,3 +157,22 @@ def getSubImage(im, roi):
     roi1 = getSensibleROI(roi, im.shape)
     (x1, y1, x2, y2) = roi1[0]
     return im[x1:x2, y1:y2]
+
+
+def getExpectationValues(im, roi=None):
+    X, Y = np.indices(im.shape)
+    roi1 = getSensibleROI(roi, im.shape)[0]
+    if roi is not None:
+        Xs = X[roi1[0]:roi1[2], roi1[1]:roi1[3]]
+        Ys = Y[roi1[0]:roi1[2], roi1[1]:roi1[3]]
+        ims = im[roi1[0]:roi1[2], roi1[1]:roi1[3]]
+    else:
+        Xs, Ys, ims = X, Y, im
+    total = ims.sum()
+    x_ex = (Xs * ims).sum() / total
+    y_ex = (Ys * ims).sum() / total
+    x2_ex = (Xs ** 2 * ims).sum() / total
+    y2_ex = (Ys ** 2 * ims).sum() / total
+    delx_ex = (x2_ex - x_ex**2)**0.5
+    dely_ex = (y2_ex - y_ex**2)**0.5
+    return (x_ex, x2_ex, delx_ex, y_ex, y2_ex, dely_ex)
