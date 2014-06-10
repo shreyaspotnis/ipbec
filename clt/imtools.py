@@ -4,7 +4,7 @@ from repose_lru import lru_cache
 from sys import platform as _platform
 
 if _platform == "win32":
-    import Image
+    from PIL import Image
 
 
 @lru_cache(maxsize=200)
@@ -24,7 +24,7 @@ def readImageFile(path):
         else:
             # this works in windows
             im = Image.open(path)
-            im_array = np.array(im.getdata()) + 2 ** 15
+            im_array = np.array(im.getdata()) - 2 ** 15
             im_re = np.reshape(im_array, (255, 256)).T
             return np.array(im_re, dtype=float)
 
