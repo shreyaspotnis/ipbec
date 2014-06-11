@@ -1,0 +1,2 @@
+workon compute
+python .
