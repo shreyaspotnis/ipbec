@@ -27,7 +27,7 @@
     <item row="10" column="1">
      <widget class="QLabel" name="satPixelCountLabel">
       <property name="text">
-       <string>Saturation Pixel Counts:</string>
+       <string>Intensity (I/I0)</string>
       </property>
      </widget>
     </item>
@@ -50,7 +50,14 @@ Add tags using t:. For example t:probe_scan.</string>
      </widget>
     </item>
     <item row="11" column="2">
-     <widget class="QDoubleSpinBox" name="detuningSpin"/>
+     <widget class="QDoubleSpinBox" name="detuningSpin">
+      <property name="minimum">
+       <double>-100.000000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>100.000000000000000</double>
+      </property>
+     </widget>
     </item>
     <item row="6" column="2">
      <widget class="QDoubleSpinBox" name="odMaxSpin">
@@ -143,7 +150,14 @@ Add tags using t:. For example t:probe_scan.</string>
      </widget>
     </item>
     <item row="10" column="2">
-     <widget class="QDoubleSpinBox" name="satPixCountsSpin"/>
+     <widget class="QDoubleSpinBox" name="satPixCountsSpin">
+      <property name="maximum">
+       <double>4096.000000000000000</double>
+      </property>
+      <property name="value">
+       <double>1.000000000000000</double>
+      </property>
+     </widget>
     </item>
     <item row="11" column="1">
      <widget class="QLabel" name="detuningLabel">
@@ -222,8 +236,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>odMinMaxStateChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>56</x>
-     <y>306</y>
+     <x>57</x>
+     <y>323</y>
     </hint>
     <hint type="destinationlabel">
      <x>4</x>
@@ -286,8 +300,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>103</x>
-     <y>306</y>
+     <x>104</x>
+     <y>323</y>
     </hint>
     <hint type="destinationlabel">
      <x>363</x>
@@ -302,8 +316,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>292</x>
-     <y>309</y>
+     <x>268</x>
+     <y>325</y>
     </hint>
     <hint type="destinationlabel">
      <x>369</x>
@@ -366,12 +380,60 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>handleUseRoiWhileCleaningAction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>188</x>
-     <y>386</y>
+     <x>268</x>
+     <y>403</y>
     </hint>
     <hint type="destinationlabel">
      <x>6</x>
      <y>268</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>correctSaturationCheckBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>populateAndEmitImageInfo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>56</x>
+     <y>344</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>195</x>
+     <y>427</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>satPixCountsSpin</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>populateAndEmitImageInfo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>297</x>
+     <y>345</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>376</x>
+     <y>429</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>detuningSpin</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>populateAndEmitImageInfo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>372</x>
+     <y>368</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>171</x>
+     <y>434</y>
     </hint>
    </hints>
   </connection>

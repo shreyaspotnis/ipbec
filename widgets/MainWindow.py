@@ -2,6 +2,7 @@ from PyQt4 import uic
 from pyqtgraph.dockarea import DockArea, Dock
 from widgets import ImageView, ImageBrowser, Fitter, RoiEditor, Plot1d
 from widgets import Analyzer
+from PyQt4.QtGui import QScrollArea
 
 Ui_MainWindow, QMainWindow = uic.loadUiType("ui/MainWindow.ui")
 

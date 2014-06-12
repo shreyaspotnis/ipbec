@@ -30,7 +30,7 @@ def readImageFile(path):
 
 
 def dividedImage(abs_image_, ref_image_, dark_image=None,
-                 od_minmax=None):
+                 od_minmax=None, correct_saturation=None):
         abs_image = np.array(abs_image_)
         ref_image = np.array(ref_image_)
         if dark_image is not None:
@@ -46,10 +46,14 @@ def dividedImage(abs_image_, ref_image_, dark_image=None,
         if od_minmax is not None:
             minMask = divImage < od_minmax[0]
             maxMask = divImage > od_minmax[1]
-            return (minMask * od_minmax[0] + maxMask * od_minmax[1] +
-                    (~minMask & ~maxMask) * divImage)
-        else:
-            return divImage
+            divImage = (minMask * od_minmax[0] + maxMask * od_minmax[1] +
+                       (~minMask & ~maxMask) * divImage)
+        if correct_saturation is not None:
+            intensity = correct_saturation[0]
+            detuning = correct_saturation[1]
+            prefactor = intensity/(1+detuning**2)
+            divImage += prefactor*(1-np.exp(-divImage))
+        return divImage
 
 
 def basisList(ref_images):

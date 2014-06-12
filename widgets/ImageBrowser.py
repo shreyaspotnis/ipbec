@@ -72,7 +72,8 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
             ref_image = d['ref_image']
         d['div_image'] = clt.dividedImage(d['abs_image'], ref_image,
                                           d['dark_image'],
-                                          od_minmax=self.getODMinMax())
+                                          od_minmax=self.getODMinMax(),
+                                          correct_saturation=self.getSaturationParms())
         d['image_type'] = self.getImageType()
         key = d['path_to_abs']
         if key not in self.global_save_info:
@@ -436,6 +437,13 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
             return None
         else:
             return (self.odMinSpin.value(), self.odMaxSpin.value())
+
+    def getSaturationParms(self):
+        if self.correctSaturationCheckBox.checkState() == 0:
+            return None
+        else:
+            gamma = 6.0666  # MHz
+            return (self.satPixCountsSpin.value(), 2.0*self.detuningSpin.value()/gamma)
 
     def handleRoiChanged(self, new_roi):
         """Slot: Changes ROI used for cleaning images."""
