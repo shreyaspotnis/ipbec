@@ -73,6 +73,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         d['div_image'] = clt.dividedImage(d['abs_image'], ref_image,
                                           d['dark_image'],
                                           od_minmax=self.getODMinMax(),
+                                          correct_od_saturation=self.getODSaturationParms(),
                                           correct_saturation=self.getSaturationParms())
         d['image_type'] = self.getImageType()
         key = d['path_to_abs']
@@ -214,7 +215,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                 self.current_image_index = ci
                 self.imageListCombo.setCurrentIndex(ci)
                 self.imageIndexSpin.setValue(ci)
-                
+
 
                 # connect slot again once done adding
                 self.imageListCombo.currentIndexChanged.connect(
@@ -444,6 +445,13 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         else:
             gamma = 6.0666  # MHz
             return (self.satPixCountsSpin.value(), 2.0*self.detuningSpin.value()/gamma)
+
+    def getODSaturationParms(self):
+        if self.correctODSaturationCheckBox.checkState() == 0:
+            return None
+        else:
+            return float(self.odSatSpin.value())
+
 
     def handleRoiChanged(self, new_roi):
         """Slot: Changes ROI used for cleaning images."""

@@ -34,7 +34,7 @@
     <item row="10" column="0">
      <widget class="QCheckBox" name="correctSaturationCheckBox">
       <property name="text">
-       <string>Correct Saturation</string>
+       <string>Correct Probe Saturation</string>
       </property>
      </widget>
     </item>
@@ -217,6 +217,27 @@ Add tags using t:. For example t:probe_scan.</string>
       </property>
      </widget>
     </item>
+    <item row="7" column="0">
+     <widget class="QCheckBox" name="correctODSaturationCheckBox">
+      <property name="text">
+       <string>Correct OD saturation</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="2">
+     <widget class="QDoubleSpinBox" name="odSatSpin">
+      <property name="value">
+       <double>5.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>OD Saturation</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
  </widget>
@@ -236,8 +257,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>odMinMaxStateChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>323</y>
+     <x>58</x>
+     <y>297</y>
     </hint>
     <hint type="destinationlabel">
      <x>4</x>
@@ -300,8 +321,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>104</x>
-     <y>323</y>
+     <x>105</x>
+     <y>297</y>
     </hint>
     <hint type="destinationlabel">
      <x>363</x>
@@ -316,8 +337,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>268</x>
-     <y>325</y>
+     <x>277</x>
+     <y>299</y>
     </hint>
     <hint type="destinationlabel">
      <x>369</x>
@@ -333,7 +354,7 @@ Add tags using t:. For example t:probe_scan.</string>
    <hints>
     <hint type="sourcelabel">
      <x>400</x>
-     <y>309</y>
+     <y>299</y>
     </hint>
     <hint type="destinationlabel">
      <x>366</x>
@@ -434,6 +455,38 @@ Add tags using t:. For example t:probe_scan.</string>
     <hint type="destinationlabel">
      <x>171</x>
      <y>434</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>correctODSaturationCheckBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>populateAndEmitImageInfo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>82</x>
+     <y>315</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>208</x>
+     <y>218</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>odSatSpin</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>populateAndEmitImageInfo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>347</x>
+     <y>307</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>410</x>
+     <y>69</y>
     </hint>
    </hints>
   </connection>

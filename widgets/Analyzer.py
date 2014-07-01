@@ -118,6 +118,7 @@ class Analyzer(QWidget):
         m_rb = 1.443e-25         # (kg) Mass of Rubiduim87
 
         sigma_23 = 2.906692e-9  # cm^2
+        # sigma_22 =
         Isat_23 = 1.66933  # mW/cm^2
         pi = 3.1415926
         gamma = 6.0666  # MHz
@@ -201,12 +202,21 @@ class Analyzer(QWidget):
 
         elif self.fit_type == 'TF Int':
             (height, xc, yc, rx, ry, offset) = fit_parms
-            OD_i = height*(pi*rx*ry/2.0)
             OD_i = height*(2.0*pi*rx*ry/5.0)
             T_H = 0
             T_V = 0
             bec_fraction = 1.0
             mu = 0  # TODO: calculate mu later on
+        elif self.fit_type == 'Double Gauss 2D':
+            # parameterNames = ['Height 1', 'X Center 1', 'Y Center 1', 'X Width 1',
+            #           'Y Width 1', 'Height 2', 'X Center 2', 'Y Center 2',
+            #           'X Width 2', 'Y Width 2', 'Offset']
+            (h1, xc1, yc1, xw1, yw1, h2, xc2, yc2, xw2, yw2, offset) = fit_parms
+            OD_i = h1*(2.0*pi*xw1*yw1) + h2*(2.0*pi*xw2*yw2)
+            T_H = 0
+            T_V = 0
+            bec_fraction = 0.0
+            mu = 0.0
 
         # do your calculations here
         Nf = OD_i*OD_to_atom_number

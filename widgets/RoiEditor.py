@@ -139,6 +139,10 @@ class RoiEditor(QWidget, Ui_RoiEditor):
 
         self.roiChanged.emit((V, self.hvCombo.currentIndex()))
 
+    def getROI(self):
+        V = [sb.value() for sb in self.pSB]
+        return (V, self.hvCombo.currentIndex())
+
     def handleStretch(self):
         """Stretch the ROI in a direction perpendicular to the
         integration direction."""

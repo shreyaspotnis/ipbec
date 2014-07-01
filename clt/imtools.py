@@ -30,7 +30,8 @@ def readImageFile(path):
 
 
 def dividedImage(abs_image_, ref_image_, dark_image=None,
-                 od_minmax=None, correct_saturation=None):
+                 od_minmax=None, correct_od_saturation=None,
+                 correct_saturation=None):
         abs_image = np.array(abs_image_)
         ref_image = np.array(ref_image_)
         if dark_image is not None:
@@ -48,6 +49,15 @@ def dividedImage(abs_image_, ref_image_, dark_image=None,
             maxMask = divImage > od_minmax[1]
             divImage = (minMask * od_minmax[0] + maxMask * od_minmax[1] +
                        (~minMask & ~maxMask) * divImage)
+
+        if correct_od_saturation is not None:
+            maxOD = (correct_od_saturation - 0.005)
+            maxMask = divImage > maxOD
+            divImage = maxMask * maxOD + (~maxMask) * divImage
+            log_odm = np.exp(-divImage)
+            log_ods = np.exp(-correct_od_saturation)
+            divImage = -np.log((log_odm - log_ods) / (1.0 - log_ods))
+
         if correct_saturation is not None:
             intensity = correct_saturation[0]
             detuning = correct_saturation[1]
