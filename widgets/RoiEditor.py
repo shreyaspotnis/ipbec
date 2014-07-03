@@ -1,5 +1,6 @@
 from PyQt4 import uic
 from PyQt4.QtCore import pyqtSignal
+from PyQt4 import QtGui
 import pyqtgraph as pg
 
 Ui_RoiEditor, QWidget = uic.loadUiType("ui/RoiEditor.ui")
@@ -188,6 +189,9 @@ class RoiEditor(QWidget, Ui_RoiEditor):
 
     def handleCopy(self):
         print('couyp')
+        val = [sb.value() for sb in self.pSB]
+        clipboard = QtGui.QApplication.clipboard()
+        clipboard.setText(repr(val))
 
     def handlePaste(self):
         print('past')
