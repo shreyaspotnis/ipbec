@@ -9,6 +9,9 @@ import os
 import os.path as path
 
 from widgets import SaveDialog
+from clt.imtools import getSubImage
+import matplotlib.animation as animation
+import matplotlib.pyplot as plt
 
 Ui_ImageBrowser, QWidget = uic.loadUiType("ui/ImageBrowser.ui")
 
@@ -474,7 +477,52 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                     del self.global_save_info[key]
                     print('deleting: ' + key)
 
-
     def handleSaveAnalysis(self):
         save_dialog = SaveDialog(self.settings, self.global_save_info, self.image_list)
         save_dialog.exec_()
+
+    def handleMakeMovie(self):
+        print('handle')
+        image_list = []
+        for index in range(self.image_list.n_images):
+            d = {}
+            d['abs_image'] = clt.readImageFile(self.image_list.absorption_files[index])
+            d['ref_image'] = clt.readImageFile(self.image_list.reference_files[index])
+            d['dark_image'] = clt.readImageFile(self.path_to_dark_file)
+
+            if self.is_cleaned and self.useCleanedCheck.checkState() == 2:
+                ref_image = self.clean_ref_images[index]
+            else:
+                ref_image = d['ref_image']
+            d['div_image'] = clt.dividedImage(d['abs_image'], ref_image,
+                                              d['dark_image'],
+                                              od_minmax=self.getODMinMax(),
+                                              correct_od_saturation=self.getODSaturationParms(),
+                                              correct_saturation=self.getSaturationParms())
+            d['image_type'] = self.getImageType()
+
+            image_in_roi = getSubImage(d['div_image'], self.cleaning_roi)
+            image_list.append(image_in_roi)
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.set_aspect('equal')
+        ax.get_xaxis().set_visible(False)
+        ax.get_yaxis().set_visible(False)
+
+        im = ax.imshow(image_list[0], cmap='gray', interpolation='nearest')
+        im.set_clim([0, 1])
+        fig.set_size_inches([5, 5])
+
+        plt.tight_layout()
+
+        def update_img(n):
+            im.set_data(image_list[n])
+            return im
+
+        #legend(loc=0)
+        ani = animation.FuncAnimation(fig, update_img, len(image_list),
+                                      interval=30)
+        #writer = animation.writers['gif'](fps=10)
+
+        ani.save('demo.gif')

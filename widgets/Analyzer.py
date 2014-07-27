@@ -16,7 +16,7 @@ class Analyzer(QWidget):
                'Int Number V', 'NH/(NH+NV)', '<x>', '<x2>', '<delx>',
                '<y>', '<y2>', '<dely>']
     OutputFormats = ['%.2e', '%.2e', '%.2g', '%.2g', '%g', '%g', '%.3g',
-                     '%.1g', '%.2e', '%.2e', '%.3e', '%3.1f', '%3.1f', '%3.1f',
+                     '%.1f', '%.2e', '%.2e', '%.3e', '%3.1f', '%3.1f', '%3.1f',
                      '%3.1f', '%3.1f', '%3.1f', ]
 
     def __init__(self, settings, parent=None):
@@ -207,6 +207,7 @@ class Analyzer(QWidget):
             T_V = 0
             bec_fraction = 1.0
             mu = 0  # TODO: calculate mu later on
+            mu = (ry*ps*1e-6/tof/1e-3) ** 2 / 7.0 * (m_rb/kb*1e9)
         elif self.fit_type == 'Double Gauss 2D':
             # parameterNames = ['Height 1', 'X Center 1', 'Y Center 1', 'X Width 1',
             #           'Y Width 1', 'Height 2', 'X Center 2', 'Y Center 2',
@@ -216,7 +217,7 @@ class Analyzer(QWidget):
             T_H = 0
             T_V = 0
             bec_fraction = 0.0
-            mu = 0.0
+
 
         # do your calculations here
         Nf = OD_i*OD_to_atom_number
