@@ -38,17 +38,6 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="0" colspan="3">
-     <widget class="QPlainTextEdit" name="commentTextEdit">
-      <property name="toolTip">
-       <string>Add Comments to this file.
-Add tags using t:. For example t:probe_scan.</string>
-      </property>
-      <property name="plainText">
-       <string/>
-      </property>
-     </widget>
-    </item>
     <item row="11" column="2">
      <widget class="QDoubleSpinBox" name="detuningSpin">
       <property name="minimum">
@@ -75,7 +64,7 @@ Add tags using t:. For example t:probe_scan.</string>
       </property>
      </widget>
     </item>
-    <item row="13" column="0" colspan="3">
+    <item row="14" column="0" colspan="3">
      <widget class="QLabel" name="label">
       <property name="text">
        <string>Add Image Processing here</string>
@@ -96,6 +85,119 @@ Add tags using t:. For example t:probe_scan.</string>
       </property>
       <property name="text">
        <string>of 0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0" colspan="3">
+     <widget class="QPlainTextEdit" name="commentTextEdit">
+      <property name="toolTip">
+       <string>Add Comments to this file.
+Add tags using t:. For example t:probe_scan.</string>
+      </property>
+      <property name="plainText">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="2">
+     <widget class="QDoubleSpinBox" name="satPixCountsSpin">
+      <property name="maximum">
+       <double>4096.000000000000000</double>
+      </property>
+      <property name="value">
+       <double>1.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>OD Saturation</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <widget class="QCheckBox" name="excludeROICheck">
+      <property name="text">
+       <string>Exclude ROI</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QCheckBox" name="correctODSaturationCheckBox">
+      <property name="text">
+       <string>Correct OD saturation</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="2">
+     <widget class="QDoubleSpinBox" name="odSatSpin">
+      <property name="value">
+       <double>5.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QCheckBox" name="odMinMaxCheck">
+      <property name="text">
+       <string>OD Min Max</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="3">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="0" colspan="3">
+     <widget class="QComboBox" name="imageListCombo">
+      <property name="toolTip">
+       <string>Select file to view from list</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="1">
+     <widget class="QLabel" name="detuningLabel">
+      <property name="text">
+       <string>Detuning (MHz)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="0">
+     <widget class="QPushButton" name="pushClean">
+      <property name="text">
+       <string>Clean</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="2">
+     <widget class="QCheckBox" name="useCleanedCheck">
+      <property name="text">
+       <string>Use Cleaned</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QDoubleSpinBox" name="odMinSpin">
+      <property name="toolTip">
+       <string>Any pixel with OD less than this will be set to this.</string>
+      </property>
+      <property name="minimum">
+       <double>-10.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+      <property name="value">
+       <double>-0.500000000000000</double>
       </property>
      </widget>
     </item>
@@ -126,59 +228,6 @@ Add tags using t:. For example t:probe_scan.</string>
       </item>
      </widget>
     </item>
-    <item row="0" column="0" colspan="3">
-     <widget class="QComboBox" name="imageListCombo">
-      <property name="toolTip">
-       <string>Select file to view from list</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="1">
-     <widget class="QDoubleSpinBox" name="odMinSpin">
-      <property name="toolTip">
-       <string>Any pixel with OD less than this will be set to this.</string>
-      </property>
-      <property name="minimum">
-       <double>-10.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.100000000000000</double>
-      </property>
-      <property name="value">
-       <double>-0.500000000000000</double>
-      </property>
-     </widget>
-    </item>
-    <item row="10" column="2">
-     <widget class="QDoubleSpinBox" name="satPixCountsSpin">
-      <property name="maximum">
-       <double>4096.000000000000000</double>
-      </property>
-      <property name="value">
-       <double>1.000000000000000</double>
-      </property>
-     </widget>
-    </item>
-    <item row="11" column="1">
-     <widget class="QLabel" name="detuningLabel">
-      <property name="text">
-       <string>Detuning (MHz)</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0" colspan="3">
-     <spacer name="horizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
     <item row="3" column="0" colspan="3">
      <widget class="QLabel" name="fileDateTime">
       <property name="toolTip">
@@ -189,52 +238,10 @@ Add tags using t:. For example t:probe_scan.</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
-     <widget class="QCheckBox" name="odMinMaxCheck">
+    <item row="13" column="0">
+     <widget class="QPushButton" name="makeMovieButton">
       <property name="text">
-       <string>OD Min Max</string>
-      </property>
-     </widget>
-    </item>
-    <item row="12" column="0">
-     <widget class="QPushButton" name="pushClean">
-      <property name="text">
-       <string>Clean</string>
-      </property>
-     </widget>
-    </item>
-    <item row="12" column="1">
-     <widget class="QCheckBox" name="excludeROICheck">
-      <property name="text">
-       <string>Exclude ROI</string>
-      </property>
-     </widget>
-    </item>
-    <item row="12" column="2">
-     <widget class="QCheckBox" name="useCleanedCheck">
-      <property name="text">
-       <string>Use Cleaned</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="0">
-     <widget class="QCheckBox" name="correctODSaturationCheckBox">
-      <property name="text">
-       <string>Correct OD saturation</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="2">
-     <widget class="QDoubleSpinBox" name="odSatSpin">
-      <property name="value">
-       <double>5.000000000000000</double>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="1">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>OD Saturation</string>
+       <string>Make Movie</string>
       </property>
      </widget>
     </item>
@@ -257,8 +264,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>odMinMaxStateChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>58</x>
-     <y>297</y>
+     <x>59</x>
+     <y>268</y>
     </hint>
     <hint type="destinationlabel">
      <x>4</x>
@@ -273,8 +280,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>correctSaturationStateChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>82</x>
-     <y>337</y>
+     <x>83</x>
+     <y>320</y>
     </hint>
     <hint type="destinationlabel">
      <x>2</x>
@@ -321,8 +328,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>105</x>
-     <y>297</y>
+     <x>106</x>
+     <y>268</y>
     </hint>
     <hint type="destinationlabel">
      <x>363</x>
@@ -338,7 +345,7 @@ Add tags using t:. For example t:probe_scan.</string>
    <hints>
     <hint type="sourcelabel">
      <x>277</x>
-     <y>299</y>
+     <y>270</y>
     </hint>
     <hint type="destinationlabel">
      <x>369</x>
@@ -354,7 +361,7 @@ Add tags using t:. For example t:probe_scan.</string>
    <hints>
     <hint type="sourcelabel">
      <x>400</x>
-     <y>299</y>
+     <y>270</y>
     </hint>
     <hint type="destinationlabel">
      <x>366</x>
@@ -369,8 +376,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>handleCleanAction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>132</x>
-     <y>395</y>
+     <x>133</x>
+     <y>377</y>
     </hint>
     <hint type="destinationlabel">
      <x>7</x>
@@ -385,8 +392,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>handleUseCleanedAction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>324</x>
-     <y>389</y>
+     <x>400</x>
+     <y>374</y>
     </hint>
     <hint type="destinationlabel">
      <x>430</x>
@@ -401,8 +408,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>handleUseRoiWhileCleaningAction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>268</x>
-     <y>403</y>
+     <x>277</x>
+     <y>374</y>
     </hint>
     <hint type="destinationlabel">
      <x>6</x>
@@ -417,8 +424,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>56</x>
-     <y>344</y>
+     <x>57</x>
+     <y>320</y>
     </hint>
     <hint type="destinationlabel">
      <x>195</x>
@@ -433,8 +440,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>297</x>
-     <y>345</y>
+     <x>400</x>
+     <y>322</y>
     </hint>
     <hint type="destinationlabel">
      <x>376</x>
@@ -449,8 +456,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>372</x>
-     <y>368</y>
+     <x>400</x>
+     <y>348</y>
     </hint>
     <hint type="destinationlabel">
      <x>171</x>
@@ -465,8 +472,8 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>82</x>
-     <y>315</y>
+     <x>83</x>
+     <y>294</y>
     </hint>
     <hint type="destinationlabel">
      <x>208</x>
@@ -481,12 +488,28 @@ Add tags using t:. For example t:probe_scan.</string>
    <slot>populateAndEmitImageInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>347</x>
-     <y>307</y>
+     <x>400</x>
+     <y>296</y>
     </hint>
     <hint type="destinationlabel">
      <x>410</x>
      <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>makeMovieButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ImageBrowser</receiver>
+   <slot>handleMakeMovie()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>100</x>
+     <y>401</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>414</x>
+     <y>43</y>
     </hint>
    </hints>
   </connection>
@@ -499,5 +522,6 @@ Add tags using t:. For example t:probe_scan.</string>
   <slot>handleCleanAction()</slot>
   <slot>handleUseCleanedAction()</slot>
   <slot>handleUseRoiWhileCleaningAction()</slot>
+  <slot>handleMakeMovie()</slot>
  </slots>
 </ui>
