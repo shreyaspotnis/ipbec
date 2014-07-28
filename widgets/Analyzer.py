@@ -177,8 +177,10 @@ class Analyzer(QWidget):
             # find integrated OD_i, OD_i = integral (OD dx dy)
             OD_i = height*(2.0*pi*xw*yw)
             Nf = OD_i*(1 + det_hl**2)/sigma_23
-            T_H = ((xw*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6
-            T_V = ((yw*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6
+            # factor of 2 in the end, as gaussian width is not defined the
+            # standard way. Check out definition in fittools.py
+            T_H = ((xw*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6/2.0
+            T_V = ((yw*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6/2.0
             bec_fraction = 0.0
             mu = 0  # don't caluclate for Gauss2D
 
@@ -193,6 +195,16 @@ class Analyzer(QWidget):
         elif self.fit_type == 'TF + Gauss2D':
             (h_tf, h_g, cx, cy, rx, ry, wx, wy, offset) = fit_parms
             OD_tf = h_tf*(pi*rx*ry/2.0)
+            OD_gauss = h_g*(2.0*pi*wx*wy)
+            OD_i = OD_tf + OD_gauss
+            T_H = ((wx*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6/2.0
+            T_V = ((wy*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6/2.0
+            bec_fraction = OD_tf/OD_i
+            mu = 0  # calculate mu later on
+
+        elif self.fit_type == 'TFInt + BoseEnhanced':
+            (h_tf, h_g, cx, cy, rx, ry, wx, wy, offset) = fit_parms
+            OD_tf = h_tf*(2.0*pi*rx*ry/5.0)
             OD_gauss = h_g*(2.0*pi*wx*wy)
             OD_i = OD_tf + OD_gauss
             T_H = ((wx*ps*1e-6)/(tof*1e-3))**2*m_rb/kb*1e6

@@ -4,6 +4,24 @@ import time
 import pprint
 
 
+def bose_g(z, power=3./2., n_terms=5):
+    """Evaluate the bose g function
+
+    g_n(z) = \sum{i}{z^i/n^i} for i = 1 to infinity
+
+    here n is the power
+    n_terms is the number of terms to use in the summation.
+    """
+    if isinstance(z, float):
+        sum_array = 0.0
+    else:
+        sum_array = np.zeros(z.shape)
+    for i in range(n_terms):
+        sum_array += z**(i+1) / power**(i+1)
+    return sum_array
+
+
+
 class Fitter(object):
     """Generic class for a fitting function. Every fitting class should have
     the following functions"""
@@ -243,6 +261,53 @@ class TFGauss2D(Gauss2D):
                              offset)
 
 
+class TFIntBoseEnhanced(Gauss2D):
+    """Fitter class for a 2D integrated Thomas Fermi plus a Bose Enhanced
+    distribution."""
+
+    name = 'TFInt + BoseEnhanced'
+    parameterNames = ['TF Height', 'Gauss Height', 'X Center', 'Y Center',
+                      'TF X Radius', 'TF Y Radius', 'Gauss X Width',
+                      'Gauss Y Width', 'Offset']
+
+    def __init__(self, im=None):
+        super(TFIntBoseEnhanced, self).__init__(im)
+
+        self.fitParameters = [0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0]
+        self.fitParmSD = [0.0] * len(self.parameterNames)
+        self.guess = [0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0]
+
+    def autoGuess(self):
+        gaussGuess = super(TFIntBoseEnhanced, self).autoGuess()
+        # guess the initial parameters by fitting it to a gaussian first
+        (height, center_x, center_y,
+         width_x, width_y, offset) = gaussGuess
+        # use this to guess initial parameters for the new fit
+        self.guess = [height, height/2.0, center_x, center_y,
+                      width_x*2.0, width_y*2.0, width_x*2.0, width_y*2.0,
+                      offset]
+        return self.guess
+
+    def fitFunction(self, h_tf, h_g, cx, cy, rx, ry, wx, wy, offset):
+        """Returns a gaussian function with the given parameters"""
+
+        def isG0(a):
+            """Zeroes all elements of the matrix less than 0."""
+            return a * (a > 0)
+
+        # (height * isG0(1 - ((x - cx) / rx)**2 -
+        #                                    ((y-cy) / ry) ** 2) ** 1.5
+        #                      + offset)
+        bose_g_21 = bose_g(1.0, power=2.0, n_terms=10)
+        return lambda x, y: ((h_tf*isG0((1 - ((x - cx) / rx)**2
+                                         - ((y-cy) / ry) ** 2))**1.5) +
+                             h_g * bose_g(np.exp(-(((cx - x)/wx) ** 2
+                                                   + ((cy - y) / wy) ** 2)/2.0),
+                                          power=2.0, n_terms=5)/bose_g_21 +
+                             offset)
+# def bose_g(z, power=3./2., n_terms=5):
+
+
 class DoubleGauss2D(Gauss2D):
 
     name = 'Double Gauss 2D'
@@ -285,7 +350,8 @@ class DoubleGauss2D(Gauss2D):
                                          + ((cy2 - y)/wy2)**2)/2.0))
 
 
-fittypes = [Gauss2D, TF2D, TFGauss2D, DoubleGauss2D, TF2DInt]
+fittypes = [Gauss2D, TF2D, TFGauss2D, DoubleGauss2D, TF2DInt,
+            TFIntBoseEnhanced]
 
 fit_types_dict = {}
 for f in fittypes:
