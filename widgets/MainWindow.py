@@ -2,7 +2,9 @@ from PyQt4 import uic
 from pyqtgraph.dockarea import DockArea, Dock
 from widgets import ImageView, ImageBrowser, Fitter, RoiEditor, Plot1d
 from widgets import Analyzer
-from PyQt4.QtGui import QScrollArea
+from PyQt4.QtGui import QScrollArea, QAction
+from PyQt4.QtCore import QSignalMapper, QString, SIGNAL, SLOT
+from plugins import plugin_list
 
 Ui_MainWindow, QMainWindow = uic.loadUiType("ui/MainWindow.ui")
 
@@ -32,6 +34,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.roi_editor_h.initialEmit()
         self.roi_editor_v.initialEmit()
         self.roi_editor_int.initialEmit()
+
+        self.loadPlugins()
+
+    def loadPlugins(self):
+        """Looks for all plugins and creates menu entries, signals and
+           slots for them."""
+        self.pluginSignalMapper = QSignalMapper(self)
+        for p in plugin_list:
+            click_action = QAction(p.name, self)
+            self.menuPlugins.addAction(click_action)
+            self.connect(click_action, SIGNAL("triggered()"),
+                         self.pluginSignalMapper, SLOT("map()"))
+            self.pluginSignalMapper.setMapping(click_action, QString(p.name))
+        self.connect(self.pluginSignalMapper,
+                     SIGNAL("mapped(const QString &)"),
+                     self.image_browser.handlePluginClicked)
+
 
     def createDocks(self):
         """Create all dock widgets and add them to DockArea."""
@@ -99,6 +118,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.image_browser.imageChanged.connect(self.analyzer.handleImageChanged)
 
         self.roi_editor_int.roiChanged.connect(self.image_browser.handleRoiChanged)
+        self.roi_editor_h.roiChanged.connect(self.image_browser.handleROIHChanged)
+        self.roi_editor_v.roiChanged.connect(self.image_browser.handleROIVChanged)
 
         self.roi_editor_h.roiChanged.connect(self.fitter.handleROIHChanged)
         self.roi_editor_h.roiChanged.connect(self.analyzer.handleROIHChanged)

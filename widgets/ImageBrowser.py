@@ -7,6 +7,7 @@ import numpy as np
 import time
 import os
 import os.path as path
+from plugins import plugin_list
 
 from widgets import SaveDialog
 from clt.imtools import getSubImage
@@ -460,6 +461,12 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         """Slot: Changes ROI used for cleaning images."""
         self.cleaning_roi = new_roi
 
+    def handleROIHChanged(self, new_roi):
+        self.roi_h = new_roi
+
+    def handleROIVChanged(self, new_roi):
+        self.roi_v = new_roi
+
     def getROIMask(self, abs_shape):
         mask = np.ones(abs_shape)
         if self.use_roi_while_cleaning:
@@ -526,3 +533,42 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         #writer = animation.writers['gif'](fps=10)
 
         ani.save('demo.gif')
+
+    def handlePluginClicked(self, plugin_name):
+        for p in plugin_list:
+            if p.name == plugin_name:
+                print("found")
+                plugin_dialog = p(self.settings, self.makePluginDataPackage())
+                plugin_dialog.exec_()
+
+    def makePluginDataPackage(self):
+        """Returns a dict with all the data a plugin would need."""
+        data_dict = {}
+        data_dict['roi_int'] = self.cleaning_roi
+        data_dict['roi_h'] = self.roi_h
+        data_dict['roi_v'] = self.roi_v
+
+        abs_images = [clt.readImageFile(p) for p in
+                      self.image_list.absorption_files]
+        ref_images = [clt.readImageFile(p) for p in
+                      self.image_list.reference_files]
+        dark_image = clt.readImageFile(self.path_to_dark_file)
+
+        if self.is_cleaned and self.useCleanedCheck.checkState() == 2:
+            use_refs = self.clean_ref_images
+        else:
+            use_refs = ref_images
+
+        sat_od_parms = self.getODSaturationParms()
+        corr_sat_parms = self.getSaturationParms()
+        div_images = [clt.dividedImage(ai, ri, dark_image,
+                                       od_minmax=self.getODMinMax(),
+                                       correct_od_saturation=sat_od_parms,
+                                       correct_saturation=corr_sat_parms)
+                      for ai, ri in zip(abs_images, use_refs)]
+        data_dict['abs_images'] = abs_images
+        data_dict['ref_images'] = use_refs
+        data_dict['dark_image'] = dark_image
+        data_dict['div_images'] = div_images
+        return data_dict
+
