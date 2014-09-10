@@ -24,6 +24,11 @@ class PluginDialog(QDialog):
         div_images = self.data_dict['ref_images']
         self.n_images = len(div_images)
 
+        div_image_1 = self.data_dict['div_images'][0]
+        roi_h = self.data_dict['roi_h']
+        indices, data = getROISlice(div_image_1, roi_h)
+        self.max_length = len(data)
+
         self.settings.beginGroup('savedialog')
         self.save_folder = str(self.settings.value('save_folder', './').toString())
         self.settings.endGroup()
@@ -40,8 +45,10 @@ class PluginDialog(QDialog):
             dp.setPen((255, 0, 0))
 
         self.offsetSpinBox = QtGui.QSpinBox(self)
+        self.offsetSpinBox.setMaximum(self.max_length)
         self.offsetSpinBox.setValue(1)
         self.spacingSpinBox = QtGui.QSpinBox(self)
+        self.spacingSpinBox.setMaximum(self.max_length)
         self.spacingSpinBox.setValue(1)
         self.resetButton = QtGui.QPushButton("Reset", self)
         self.resetButton.clicked.connect(self.handleReset)
