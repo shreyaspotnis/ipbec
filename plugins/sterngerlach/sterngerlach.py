@@ -125,7 +125,7 @@ class PluginDialog(QDialog):
         file_name = str(save_dialog(self, caption='Save as...',
                                     directory=self.save_folder))
         if file_name != '':
-            header_string = '#Blablabla fill in later'
+            header_string = 'mF=-2\t mF=-1\tmF=0\t mF=1\tmF=2'
             np.savetxt(file_name, populations, delimiter='\t',
                        header=header_string)
 
