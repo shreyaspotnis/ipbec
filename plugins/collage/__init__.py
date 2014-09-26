@@ -1,0 +1,2 @@
+from collage import PluginDialog
+
