@@ -190,3 +190,15 @@ def getExpectationValues(im, roi=None):
     delx_ex = (x2_ex - x_ex**2)**0.5
     dely_ex = (y2_ex - y_ex**2)**0.5
     return (x_ex, x2_ex, delx_ex, y_ex, y2_ex, dely_ex)
+
+
+def getMeanCounts(im, roi=None):
+    X, Y = np.indices(im.shape)
+    roi1 = getSensibleROI(roi, im.shape)[0]
+    if roi is not None:
+        Xs = X[roi1[0]:roi1[2], roi1[1]:roi1[3]]
+        Ys = Y[roi1[0]:roi1[2], roi1[1]:roi1[3]]
+        ims = im[roi1[0]:roi1[2], roi1[1]:roi1[3]]
+    else:
+        Xs, Ys, ims = X, Y, im
+    return np.mean(ims)
