@@ -219,7 +219,10 @@ class Analyzer(QWidget):
             T_V = 0
             bec_fraction = 1.0
             mu = 0  # TODO: calculate mu later on
-            mu = (ry*ps*1e-6/tof/1e-3) ** 2 / 7.0 * (m_rb/kb*1e9)
+            ###########################
+            ###########################
+            # changed it from
+            mu = (ry*ps*1e-6/tof/1e-3) ** 2 * 2.0 / 7.0 * (m_rb/kb*1e9)
         elif self.fit_type == 'Double Gauss 2D':
             # parameterNames = ['Height 1', 'X Center 1', 'Y Center 1', 'X Width 1',
             #           'Y Width 1', 'Height 2', 'X Center 2', 'Y Center 2',
