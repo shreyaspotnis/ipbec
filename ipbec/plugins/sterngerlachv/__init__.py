@@ -1,0 +1,1 @@
+from sterngerlachv import PluginDialog
