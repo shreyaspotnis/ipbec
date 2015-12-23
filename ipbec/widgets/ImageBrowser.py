@@ -6,8 +6,6 @@ import numpy as np
 import time
 import os
 import os.path as path
-import matplotlib.animation as animation
-import matplotlib.pyplot as plt
 
 from ipbec.plugins import plugin_list
 from ipbec import clt

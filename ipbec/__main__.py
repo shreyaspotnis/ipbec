@@ -3,8 +3,6 @@
 import sys
 import os
 from PyQt4 import QtGui, QtCore
-import matplotlib
-matplotlib.use('Agg')
 from widgets import MainWindow
 from sys import platform as _platform
 
