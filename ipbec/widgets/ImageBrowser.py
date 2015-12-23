@@ -16,6 +16,9 @@ from ipbec.clt.imtools import getSubImage
 
 
 main_package_dir = os.path.join(os.path.dirname(__file__), os.pardir)
+default_image_dir = os.path.join(main_package_dir, 'testdata/test_images')
+default_dark_path = os.path.join(main_package_dir, 'testdata/darks/default.tif')
+
 ui_filename = os.path.join(main_package_dir, "ui/ImageBrowser.ui")
 Ui_ImageBrowser, QWidget = uic.loadUiType(ui_filename)
 
@@ -31,9 +34,8 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         self.settings = settings
         self.main_window = parent
 
-        self.current_directory = main_package_dir
-        self.path_to_dark_file = os.path.join(main_package_dir,
-                                              'tests/data/darks/default.tif')
+        self.current_directory = default_image_dir
+        self.path_to_dark_file = default_dark_path
         self.path_to_json_db = os.path.join(main_package_dir,
                                             'image_save_info.json')
 
@@ -249,7 +251,8 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
     def loadSettings(self):
         self.settings.beginGroup('imagebrowser')
         self.setCurrentDirectory(
-            str(self.settings.value('current_directory','./').toString()))
+            str(self.settings.value('current_directory',
+                                    default_image_dir).toString()))
         self.path_to_dark_file = str(
             self.settings.value('path_to_dark_file',
             self.path_to_dark_file).toString())
