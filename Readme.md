@@ -57,6 +57,6 @@ it into a numpy array.
 Second, modify the `ImageList` class in `clt/ImageList.py` to suit your
 file naming format. The way it's done currently is for every absorption image,
 two new images are added. The first is an absorption image, and the second
-is a reference image. The absorption image ends with 'Abs.tif' and the reference
-image ends with 'Ref.tif'. Check out `/ipbec/testdata/test_images` for some
+is a reference image. The absorption image ends with `'Abs.tif'` and the reference
+image ends with `'Ref.tif'`. Check out `/ipbec/testdata/test_images` for some
 sample images.
