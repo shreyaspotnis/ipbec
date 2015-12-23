@@ -13,7 +13,8 @@ are python modules so that they can be reused in external scripts.
 
 ## Requirements
 IP-BEC is written in PyQt4 and uses pyqtgraph for plotting. Hence, it is
-completely cross-platform. The following python packages are required:
+completely cross-platform. It has been tested on Windows, Mac and Linux using
+python 2.7. The following python packages are required:
 
 - [PyQt4](https://www.riverbankcomputing.com/software/pyqt/download)
 - [pyqtpgraph](http://www.pyqtgraph.org/)
@@ -33,3 +34,29 @@ python -m ipbec
 
 ```
 
+## Features
+
+- Watches a directory and automatically updates as new images are acquired.
+- Fitting to 2D distributions. Can easily add more fitting functions.
+- Fringe reduction.
+- Correction for probe detuning, high probe intensity, correction for
+non-resonant light.
+- Extensible: support for plugins.
+- Tagging of images.
+
+## Usage
+
+IP-BEC works by watching a directory for new images. As absorption images are
+acquired, they are added to this directory. For IPBEC to work for your setup,
+two things need to be changed.
+
+First, modify the function `readImageFile` in
+`ipbec/clt/imtools.py` so that it reads your image format of choice and converts
+it into a numpy array.
+
+Second, modify the `ImageList` class in `clt/ImageList.py` to suit your
+file naming format. The way it's done currently is for every absorption image,
+two new images are added. The first is an absorption image, and the second
+is a reference image. The absorption image ends with 'Abs.tif' and the reference
+image ends with 'Ref.tif'. Check out `/ipbec/testdata/test_images` for some
+sample images.
