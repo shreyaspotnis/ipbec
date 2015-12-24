@@ -1,5 +1,5 @@
 import numpy as np
-from matplotlib.pyplot import imread
+from matplotlib.image import imread
 from repose_lru import lru_cache
 from sys import platform as _platform
 

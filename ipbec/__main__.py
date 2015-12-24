@@ -6,9 +6,6 @@ from PyQt4 import QtGui, QtCore
 from ipbec.widgets import MainWindow
 from sys import platform as _platform
 
-import matplotlib
-matplotlib.use('agg')
-
 main_dir = os.path.dirname(os.path.abspath(__file__))
 path_to_icon = os.path.join(main_dir, 'icon.png')
 
