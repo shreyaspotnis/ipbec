@@ -1,14 +1,8 @@
 from setuptools import setup
 
-
-def readme():
-    with open('README.md') as f:
-        return f.read()
-
 setup(name='ipbec',
-      version='0.1',
+      version='0.1.1',
       description='A PyQT application analyze absorption images of Bose-Einstein condensates',
-      long_description=readme(),
       classifiers=['Development Status :: 3 - Alpha',
                    'Environment :: X11 Applications :: Qt',
                    'Intended Audience :: Science/Research',
@@ -24,5 +18,5 @@ setup(name='ipbec',
       author_email='shreyaspotnis@gmail.com',
       license='MIT',
       packages=['ipbec'],
-      install_requires=['PyQt4', 'pyqtgraph', 'numpy'],
+      install_requires=['pyqtgraph', 'numpy'],
       zip_safe=False)
