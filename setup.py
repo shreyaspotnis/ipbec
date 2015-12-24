@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='ipbec',
-      version='0.1.5',
+      version='0.1.6',
       description='A PyQT application analyze absorption images of Bose-Einstein condensates',
       classifiers=['Development Status :: 3 - Alpha',
                    'Environment :: X11 Applications :: Qt',
