@@ -18,6 +18,6 @@ setup(name='ipbec',
       author_email='shreyaspotnis@gmail.com',
       license='MIT',
       packages=['ipbec'],
-      install_requires=['pyqtgraph', 'numpy'],
+      install_requires=['pyqtgraph', 'numpy', 'matplotlib'],
       include_package_data=True,
       zip_safe=False)
