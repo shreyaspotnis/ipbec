@@ -3,7 +3,7 @@
 import sys
 import os
 from PyQt4 import QtGui, QtCore
-from widgets import MainWindow
+from ipbec.widgets import MainWindow
 from sys import platform as _platform
 
 
