@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='ipbec',
-      version='0.1.3',
+      version='0.1.5',
       description='A PyQT application analyze absorption images of Bose-Einstein condensates',
       classifiers=['Development Status :: 3 - Alpha',
                    'Environment :: X11 Applications :: Qt',
@@ -19,4 +19,5 @@ setup(name='ipbec',
       license='MIT',
       packages=['ipbec'],
       install_requires=['pyqtgraph', 'numpy'],
+      include_package_data=True,
       zip_safe=False)

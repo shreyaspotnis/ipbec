@@ -27,6 +27,16 @@ python 2.7. The following python packages are required:
 pip install ipbec
 ```
 
+If you wish to modify the code, download the package in a local directory
+and install it in develop mode.
+
+```bash
+cd path/to/installation
+git clone https://github.com/shreyaspotnis/ipbec
+cd ipbec
+python setup.py develop
+```
+
 ## Running
 
 ```bash
