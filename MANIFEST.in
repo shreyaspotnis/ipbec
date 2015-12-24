@@ -1,1 +1,2 @@
-include Readme.md
+recursive-include ipbec *.py *.ui *.m README.* *.txt *.tif
+global-exclude *.pyc
