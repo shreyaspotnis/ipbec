@@ -11,8 +11,14 @@ path_to_icon = os.path.join(main_dir, 'icon.png')
 
 
 def main():
-    path_to_settings = os.path.join(main_dir, 'settings.ini')
-    settings = QtCore.QSettings(path_to_settings, QtCore.QSettings.IniFormat)
+    # see if we can write to main_dir
+    if os.access(main_dir, os.W_OK):
+        # if yes, then put all settings in an ini file there
+        path_to_settings = os.path.join(main_dir, 'settings.ini')
+        settings = QtCore.QSettings(path_to_settings, QtCore.QSettings.IniFormat)
+    else:
+        # else use Qt settings system
+        settings = QtCore.QSettings('IPBEC', 'Shreyas Potnis')
     w = MainWindow(settings)
     w.setWindowIcon(QtGui.QIcon(path_to_icon))
     w.show()

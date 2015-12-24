@@ -39,10 +39,18 @@ python setup.py develop
 
 ## Running
 
+Before running for the first time, you need to create an empty JSON database.
+Create a file with only
+```
+{}
+```
+in it. Then run ipbec:
+
 ```bash
 python -m ipbec
 
 ```
+
 
 ## Features
 

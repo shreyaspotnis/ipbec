@@ -270,7 +270,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                 'file. {} is an empty but valid JSON file. '
                 'Press no if you want to '
                 'create a new empty database at the same location. '
-                'Press cancel if you want me be to crash horribly but '
+                'Press cancel if you want me to crash horribly but '
                 'without touching the database file.')
         done = False
         while not done:
