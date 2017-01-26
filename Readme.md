@@ -1,5 +1,7 @@
 #IP-BEC
 
+![Screenshot of the GUI analyze absorption images](docs/screenshot.png?raw=true "IP-BEC GUI")
+
 IP-BEC (IP stands for image processing) is a PyQt4 application to analyze
 absorption images of Bose-Einstein Condensates. It is GUI based, but all the
 image browsing, image processing and fitting subroutines are available as
@@ -19,6 +21,7 @@ python 2.7. The following python packages are required:
 - [PyQt4](https://www.riverbankcomputing.com/software/pyqt/download)
 - [pyqtpgraph](http://www.pyqtgraph.org/)
 - [numpy](http://www.numpy.org/)
+- [pillow](https://python-pillow.org/)
 
 
 ## Installation
