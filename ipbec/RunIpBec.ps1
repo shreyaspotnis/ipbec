@@ -1,2 +1,2 @@
 workon compute
-python .
+python -m ipbec

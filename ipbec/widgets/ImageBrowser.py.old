@@ -6,6 +6,8 @@ import numpy as np
 import time
 import os
 import os.path as path
+import matplotlib.animation as animation
+import matplotlib.pyplot as plt
 
 from ipbec.plugins import plugin_list
 from ipbec import clt
@@ -14,9 +16,6 @@ from ipbec.clt.imtools import getSubImage
 
 
 main_package_dir = os.path.join(os.path.dirname(__file__), os.pardir)
-default_image_dir = os.path.join(main_package_dir, 'testdata/test_images')
-default_dark_path = os.path.join(main_package_dir, 'testdata/darks/default.tif')
-
 ui_filename = os.path.join(main_package_dir, "ui/ImageBrowser.ui")
 Ui_ImageBrowser, QWidget = uic.loadUiType(ui_filename)
 
@@ -32,8 +31,9 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         self.settings = settings
         self.main_window = parent
 
-        self.current_directory = default_image_dir
-        self.path_to_dark_file = default_dark_path
+        self.current_directory = main_package_dir
+        self.path_to_dark_file = os.path.join(main_package_dir,
+                                              'tests/data/darks/default.tif')
         self.path_to_json_db = os.path.join(main_package_dir,
                                             'image_save_info.json')
 
@@ -249,8 +249,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
     def loadSettings(self):
         self.settings.beginGroup('imagebrowser')
         self.setCurrentDirectory(
-            str(self.settings.value('current_directory',
-                                    default_image_dir).toString()))
+            str(self.settings.value('current_directory','./').toString()))
         self.path_to_dark_file = str(
             self.settings.value('path_to_dark_file',
             self.path_to_dark_file).toString())
@@ -270,7 +269,7 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
                 'file. {} is an empty but valid JSON file. '
                 'Press no if you want to '
                 'create a new empty database at the same location. '
-                'Press cancel if you want me to crash horribly but '
+                'Press cancel if you want me be to crash horribly but '
                 'without touching the database file.')
         done = False
         while not done:
@@ -471,9 +470,6 @@ class ImageBrowser(QWidget, Ui_ImageBrowser):
         self.roi_h = new_roi
 
     def handleROIVChanged(self, new_roi):
-        self.roi_v = new_roi
-
-    def handleROIErrChanged(self, new_roi):
         self.roi_v = new_roi
 
     def getROIMask(self, abs_shape):

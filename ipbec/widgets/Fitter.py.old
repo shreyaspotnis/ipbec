@@ -35,7 +35,6 @@ class Fitter(QWidget, Ui_Fitter):
         self.has_roi_h = False
         self.has_roi_v = False
         self.has_roi_int = False
-        self.has_roi_err = False
 
         self.setupUi(self)
 
@@ -109,9 +108,9 @@ class Fitter(QWidget, Ui_Fitter):
     def handleAutoFit(self):
         nCalls = int(self.nIterationsBox.value())
         if self.useROICheck.isChecked() and self.has_roi_int:
-            self.fit_output = self.fitter.fit(self.roi_err, nCalls, self.roi_fit)
+            self.fit_output = self.fitter.fit(nCalls, self.roi_fit)
         else:
-            self.fit_output = self.fitter.fit(self.roi_err, nCalls)
+            self.fit_output = self.fitter.fit(nCalls)
         self.fitted_data = self.fitter.fittedData()
 
         if 'fitter' in self.image_info['save_info']:
@@ -273,12 +272,6 @@ class Fitter(QWidget, Ui_Fitter):
         self.has_roi_int = True
         self.roi_int = new_roi
         self.roi_fit, _ = imtools.getSensibleROI(self.roi_int,
-                                                 self.current_image.shape)
-
-    def handleROIErrChanged(self, new_roi):
-        self.has_roi_err = True
-        self.roi_err = new_roi
-        self.roi_err, _ = imtools.getSensibleROI(self.roi_err,
                                                  self.current_image.shape)
 
     def emitROIHdata(self):

@@ -38,7 +38,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.roi_editor_h.initialEmit()
         self.roi_editor_v.initialEmit()
         self.roi_editor_int.initialEmit()
-        self.roi_editor_err.initialEmit()
 
         self.loadPlugins()
 
@@ -72,9 +71,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.roi_editor_int = RoiEditor(self.settings,
                                         self.image_view, self, name='ROI Int',
                                         pen=(1, 2), axis=1)
-        self.roi_editor_err = RoiEditor(self.settings,
-                                        self.image_view, self, name='ROI Err',
-                                        pen=(1, 3), axis=1)
         self.roi_plot_h = Plot1d(parent=self, title='ROI H')
         self.roi_plot_v = Plot1d(parent=self, title='ROI V')
 
@@ -88,7 +84,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.dock_roi_h = Dock('ROIH', widget=self.roi_editor_h)
         self.dock_roi_v = Dock('ROIV', widget=self.roi_editor_v)
         self.dock_roi_int = Dock('ROI Int', widget=self.roi_editor_int)
-        self.dock_roi_err = Dock('ROI Err', widget=self.roi_editor_err)
 
         self.dock_roi_plot_h = Dock('ROIH Plot', widget=self.roi_plot_h)
         self.dock_roi_plot_v = Dock('ROIV Plot', widget=self.roi_plot_v)
@@ -105,8 +100,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                relativeTo=self.dock_roi_h)
         self.dock_area.addDock(self.dock_roi_int, position='below',
                                relativeTo=self.dock_roi_v)
-        self.dock_area.addDock(self.dock_roi_err, position='below',
-                               relativeTo=self.dock_roi_int)
         self.dock_area.addDock(self.dock_roi_plot_h, position='below',
                                relativeTo=self.dock_image_view)
         self.dock_area.addDock(self.dock_roi_plot_v, position='right',
@@ -129,7 +122,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.image_browser.imageChanged.connect(self.analyzer.handleImageChanged)
 
         self.roi_editor_int.roiChanged.connect(self.image_browser.handleRoiChanged)
-        self.roi_editor_err.roiChanged.connect(self.image_browser.handleROIErrChanged)
         self.roi_editor_h.roiChanged.connect(self.image_browser.handleROIHChanged)
         self.roi_editor_v.roiChanged.connect(self.image_browser.handleROIVChanged)
 
@@ -139,8 +131,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.roi_editor_v.roiChanged.connect(self.analyzer.handleROIVChanged)
         self.roi_editor_int.roiChanged.connect(self.fitter.handleROIIntChanged)
         self.roi_editor_int.roiChanged.connect(self.analyzer.handleROIIntChanged)
-        self.roi_editor_err.roiChanged.connect(self.fitter.handleROIErrChanged)
-        self.roi_editor_err.roiChanged.connect(self.analyzer.handleROIErrChanged)
 
         self.image_view.doubleClicked.connect(self.roi_editor_h.centerROI)
         self.image_view.doubleClicked.connect(self.roi_editor_v.centerROI)
@@ -181,7 +171,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.saveSettings()
         self.image_browser.saveSettings()
         self.roi_editor_int.saveSettings()
-        self.roi_editor_err.saveSettings()
         self.roi_editor_v.saveSettings()
         self.roi_editor_h.saveSettings()
         self.analyzer.saveSettings()

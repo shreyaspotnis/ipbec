@@ -35,7 +35,8 @@ class ImageList(object):
 
         # check if there are two absorption images per reference image
         # find all files that end in Abs2.tif
-        abs2_files = [f for f in self.files if f[-8:]=='Abs2.tif']
+        # abs2_files = [f for f in self.files if f[-8:]=='Abs2.tif']
+        abs2_files = [f for f in self.files if f[-11:]=='Frame-3.tif']
 
         if(len(abs2_files) > 0):
             # we have 2 absorption images per ref image
@@ -54,8 +55,8 @@ class ImageList(object):
                                      for x in t]
             self.reference_files = [x for t in zip(self.ref, self.ref)
                                      for x in t]
-            short_names1 = [f[:-7] for f in self.files[::3]]
-            short_names2 = [f[:-8]+' 2' for f in self.files[1:][::3]]
+            short_names1 = [f[:-6]+' 1' for f in self.files[::3]]
+            short_names2 = [f[:-6]+' 2' for f in self.files[1:][::3]]
             self.short_names = [x for t in zip(short_names1, short_names2)
                                      for x in t]
         else:
@@ -67,10 +68,12 @@ class ImageList(object):
                                      for f in self.files[::2]]  # even entries
             self.reference_files = [os.path.join(self.path_to_dir, f)
                                     for f in self.files[1:][::2]]  # odd entries
-            self.short_names = [f[:-7] for f in self.files[::2]]
+            self.short_names = [f[:-11] for f in self.files[::2]]
             for a, r in zip(self.absorption_files, self.reference_files):
-                abs_name = re.split('Abs.tif', a)[0]
-                ref_name = re.split('Ref.tif', r)[0]
+                # abs_name = re.split('Abs.tif', a)[0]
+                # ref_name = re.split('Ref.tif', r)[0]
+                abs_name = re.split('Frame-1.tif', a)[0]
+                ref_name = re.split('Frame-2.tif', r)[0]
                 if abs_name != ref_name:
                     # TODO: handle this error
                     raise ImageListError('Absorption and Reference image names do'

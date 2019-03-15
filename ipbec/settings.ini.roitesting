@@ -1,0 +1,54 @@
+[mainwindow]
+geometry=@ByteArray(\x1\xd9\xd0\xcb\0\x1\0\0\xff\xff\xff\xf8\xff\xff\xff\xf8\0\0\a\x87\0\0\x4\x17\0\0\0\b\0\0\0\x37\0\0\x4\xf5\0\0\x3\a\0\0\0\0\x2\0)
+windowstate=@ByteArray(\0\0\0\xff\0\0\0\0\xfd\0\0\0\0\0\0\a\x80\0\0\x3\xd0\0\0\0\x4\0\0\0\x4\0\0\0\b\0\0\0\b\xfc\0\0\0\0)
+dockstate="{'float': [], 'main': ('vertical', [('horizontal', [('vertical', [('dock', 'Fitter', {}), ('tab', [('dock', 'ROIH', {}), ('dock', 'ROIV', {}), ('dock', 'ROI Int', {}), ('dock', 'ROI Err', {})], {'index': 1})], {'sizes': [677, 294]}), ('vertical', [('dock', 'Image View', {}), ('horizontal', [('dock', 'ROIH Plot', {}), ('dock', 'ROIV Plot', {})], {'sizes': [500, 548]})], {'sizes': [704, 267]}), ('vertical', [('dock', 'Analyze', {}), ('dock', 'Image Browser', {})], {'sizes': [556, 415]})], {'sizes': [377, 1053, 480]})], {'sizes': [976]})}"
+mainwindow\geometry=@ByteArray(\x1\xd9\xd0\xcb\0\x1\0\0\xff\xff\xff\xf8\xff\xff\xff\xf8\0\0\a\x87\0\0\x4\x17\0\0\x2\x30\0\0\0\xfc\0\0\x5O\0\0\x3n\0\0\0\0\x2\0)
+mainwindow\windowstate=@ByteArray(\0\0\0\xff\0\0\0\0\xfd\0\0\0\0\0\0\a\x80\0\0\x3\xd0\0\0\0\x4\0\0\0\x4\0\0\0\b\0\0\0\b\xfc\0\0\0\0)
+mainwindow\dockstate="{'float': [({'float': [], 'main': ('vertical', [('dock', 'ROIH Plot', {})], {'sizes': [308]})}, (488, 355, 965, 308)), ({'float': [], 'main': ('vertical', [('dock', 'ROIV', {})], {'sizes': [472]})}, (488, 355, 635, 472))], 'main': ('vertical', [('horizontal', [('vertical', [('dock', 'Fitter', {}), ('tab', [('dock', 'ROIH', {}), ('dock', 'ROI Int', {}), ('dock', 'ROI Err', {})], {'index': 1})], {'sizes': [486, 485]}), ('vertical', [('dock', 'Image View', {}), ('dock', 'ROIV Plot', {})], {'sizes': [488, 483]}), ('vertical', [('dock', 'Analyze', {}), ('dock', 'Image Browser', {})], {'sizes': [556, 415]})], {'sizes': [263, 1012, 635]})], {'sizes': [976]})}"
+imagebrowser\current_directory=H:\\BEC Data\\2018 08 21\\push calibration\\07 - 0p72 ms push
+imagebrowser\path_to_dark_file=H:/BEC Data/darks/2018 06 20/darks00 2018 June 20 14_59_00 003-Frame-1.tif
+imagebrowser\path_to_json_db=./temp_crash_json
+RoiEditorROI%20Int\roi="[0, 0, 100, 100]"
+RoiEditorROIV\roi="[0, 0, 100, 100]"
+RoiEditorROIH\roi="[0, 0, 100, 100]"
+analyzer\TOF%28ms%29=0
+analyzer\Pixel%20Size%28um%29=0
+analyzer\Detuning%28MHz%29=0
+analyzer\Exposure%20Time%20%28us%29=0
+analyzer\Probe%20Intensity\I0=0
+analyzer\fx%28Hz%29=0
+analyzer\fy%28Hz%29=0
+analyzer\fz%28Hz%29=0
+RoiEditorROI%20Err\roi="[0, 0, 100, 100]"
+
+[imagebrowser]
+;current_directory=H:\\BEC Data\\2019 02 07\\Atoms\\three images\\300 by 110
+current_directory=H:\\BEC Data\\2019 02 11\\two images\\300 by 50
+;path_to_dark_file=H:/BEC Data/2019 02 07/Darks/dark - 300 by 110 2019 February 07 17_26_40 001-Frame-1.tif
+path_to_dark_file=H:/BEC Data/2019 02 11/two images/300 by 50 darks/02 - darks - y 236 2019 February 11 11_23_48 001-Frame-1.tif
+path_to_json_db=H:/Logs/Ipbec/old imagebase/imagebase.json
+
+[RoiEditorROI%20Int]
+roi="[70, 227, 217, 245]"
+
+[RoiEditorROI%20Err]
+roi="[67, 29, 111, 58]"
+
+[RoiEditorROIV]
+roi="[144, 200, 158, 259]"
+
+[RoiEditorROIH]
+roi="[51, 228, 228, 245]"
+
+[analyzer]
+TOF%28ms%29=21
+Pixel%20Size%28um%29=3
+Detuning%28MHz%29=0
+Exposure%20Time%20%28us%29=0
+Probe%20Intensity\I0=0
+fx%28Hz%29=39
+fy%28Hz%29=37
+fz%28Hz%29=42
+
+[savedialog]
+save_folder=H:/BEC Analysis/2019 02 10

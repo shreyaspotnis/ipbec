@@ -59,7 +59,7 @@ class Fitter(object):
     def fitFunction(self, parms):
         pass
 
-    def fit(self, roi_err, maxfev=0, roi=None):
+    def fit(self, maxfev=0, roi=None):
         """Returns the parameters of found by a fit"""
         if not self.hasGuessed:
             self.autoGuess()
@@ -78,8 +78,7 @@ class Fitter(object):
         (p, cov_p, info_dict, mesg, ier) = output
         if cov_p is not None:
             residue = errorfunction(p)
-            od_err = np.std(self.im[roi_err[0]:roi_err[2], roi_err[1]:roi_err[3]])
-            s_sq = (residue**2).sum()/(len(residue)-len(p))/od_err**2
+            s_sq = (residue**2).sum()/(len(residue)-len(p))
             cov_p *= s_sq
             self.fitParmSD = np.abs(np.diag(cov_p)) ** 0.5
         else:
@@ -169,8 +168,8 @@ class Gauss2D(Fitter):
     def setGuessCenter(self, pos):
         self.guess[1:3] = pos
 
-    def fit(self, roi_err, maxfev=0, roi=None):
-        p = super(Gauss2D, self).fit(roi_err=roi_err, maxfev=maxfev, roi=roi)
+    def fit(self, maxfev=0, roi=None):
+        p = super(Gauss2D, self).fit(maxfev=maxfev, roi=roi)
         # make widths always positive
         self.fitParameters[3] = abs(self.fitParameters[3])
         self.fitParameters[4] = abs(self.fitParameters[4])

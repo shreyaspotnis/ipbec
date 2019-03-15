@@ -42,9 +42,8 @@ class SaveDialog(QDialog, Ui_SaveDialog):
         fitter = fittools.fit_types_dict[self.fit_type]
 
         self.fit_parms = fitter.parameterNames
-        self.fit_parms_err = ["Uncertainty_" + x for x in self.fit_parms]
 
-        self.all_labels = self.fit_parms + self.fit_parms_err + self.analyzed_outputs
+        self.all_labels = self.fit_parms + self.analyzed_outputs
         self.save_check_boxes = [QCheckBox(fL, self) for fL in self.all_labels]
         for i, s in enumerate(self.save_check_boxes):
             self.cbgrid.addWidget(s, i, 0)
@@ -72,8 +71,6 @@ class SaveDialog(QDialog, Ui_SaveDialog):
                     # we want this to be saved
                     if i < len(self.fit_parms):
                         value = image_info['fitter'][self.fit_type]['parms'][label]
-                    elif i >= len(self.fit_parms) and i < 2*len(self.fit_parms):
-                        value = image_info['fitter'][self.fit_type]['errors'][label[len("Uncertainty_"):]]
                     else:
                         value = image_info['analyzer'][self.fit_type]['output'][label]
                     data_row.append(value)

@@ -1,0 +1,48 @@
+[mainwindow]
+geometry=@ByteArray(\x1\xd9\xd0\xcb\0\x1\0\0\xff\xff\xff\xf8\xff\xff\xff\xf8\0\0\a\x87\0\0\x4\x17\0\0\0\b\0\0\0\x1f\0\0\x3\xb7\0\0\x4\a\0\0\0\0\x2\0)
+windowstate=@ByteArray(\0\0\0\xff\0\0\0\0\xfd\0\0\0\0\0\0\a\x80\0\0\x3\xd0\0\0\0\x4\0\0\0\x4\0\0\0\b\0\0\0\b\xfc\0\0\0\0)
+dockstate="{'float': [], 'main': ('vertical', [('horizontal', [('vertical', [('dock', 'Fitter', {}), ('tab', [('dock', 'ROIH', {}), ('dock', 'ROIV', {}), ('dock', 'ROI Int', {})], {'index': 2})], {'sizes': [678, 293]}), ('vertical', [('dock', 'Image View', {}), ('horizontal', [('dock', 'ROIV Plot', {}), ('dock', 'ROIH Plot', {})], {'sizes': [442, 508]})], {'sizes': [587, 384]}), ('vertical', [('dock', 'Analyze', {}), ('dock', 'Image Browser', {})], {'sizes': [556, 415]})], {'sizes': [478, 955, 477]})], {'sizes': [976]})}"
+mainwindow\geometry=@ByteArray(\x1\xd9\xd0\xcb\0\x1\0\0\0\0\x2(\0\0\0\xdd\0\0\x5W\0\0\x3v\0\0\x2\x30\0\0\0\xfc\0\0\x5O\0\0\x3n\0\0\0\0\0\0)
+mainwindow\windowstate=@ByteArray(\0\0\0\xff\0\0\0\0\xfd\0\0\0\0\0\0\x3 \0\0\x2J\0\0\0\x4\0\0\0\x4\0\0\0\b\0\0\0\b\xfc\0\0\0\0)
+mainwindow\dockstate="{'float': [], 'main': ('vertical', [('horizontal', [('vertical', [('dock', 'Fitter', {}), ('tab', [('dock', 'ROIH', {}), ('dock', 'ROIV', {}), ('dock', 'ROI Int', {})], {'index': 2})], {'sizes': [291, 290]}), ('tab', [('dock', 'Image View', {}), ('dock', 'ROIH Plot', {})], {'index': 1}), ('dock', 'ROIV Plot', {}), ('vertical', [('dock', 'Analyze', {}), ('dock', 'Image Browser', {})], {'sizes': [556, 25]})], {'sizes': [158, 219, 157, 251]})], {'sizes': [586]})}"
+imagebrowser\current_directory=H:/BEC Data/2014 07 15/lifetime sld odt
+imagebrowser\path_to_dark_file=H:/BEC Data/darks/2014 07 02/dark 000 Abs.tif
+imagebrowser\path_to_json_db=H:/Logs/Ipbec/imagebase.json
+RoiEditorROI%20Int\roi="[0, 0, 100, 100]"
+RoiEditorROIV\roi="[0, 0, 100, 100]"
+RoiEditorROIH\roi="[0, 0, 100, 100]"
+analyzer\TOF%28ms%29=0
+analyzer\Pixel%20Size%28um%29=0
+analyzer\Detuning%28MHz%29=0
+analyzer\Exposure%20Time%20%28us%29=0
+analyzer\Probe%20Intensity\I0=0
+analyzer\fx%28Hz%29=0
+analyzer\fy%28Hz%29=0
+analyzer\fz%28Hz%29=0
+
+[imagebrowser]
+current_directory=H:\\BEC Data\\2016 07 28\\Push calibration w DKC\\DKC texp 12 ms aom 0p2 tkick 2p3 ms\\01 - push m3p75 - time scan
+path_to_dark_file=H:/BEC Data/darks/2016 04 11/dark 000 Abs.tif
+path_to_json_db=H:/Logs/Ipbec/imagebase.json
+
+[RoiEditorROI%20Int]
+roi="[0, 190, 255, 227]"
+
+[RoiEditorROIV]
+roi="[89, 0, 90, 255]"
+
+[RoiEditorROIH]
+roi="[0, 205, 254, 211]"
+
+[analyzer]
+TOF%28ms%29=20
+Pixel%20Size%28um%29=3
+Detuning%28MHz%29=0
+Exposure%20Time%20%28us%29=0
+Probe%20Intensity\I0=0
+fx%28Hz%29=39
+fy%28Hz%29=37
+fz%28Hz%29=42
+
+[savedialog]
+save_folder=H:/BEC Analysis/2016 07 28/Push calibration/DKC 2p8 ms

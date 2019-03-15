@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Fitter</class>
+ <widget class="QWidget" name="Fitter">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>319</width>
+    <height>582</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>304</width>
+     <height>147</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="2" column="0">
+     <widget class="QCheckBox" name="autoGuessCheck">
+      <property name="toolTip">
+       <string>Check this if you want to automatically guess initial parameters whenever the image changes</string>
+      </property>
+      <property name="text">
+       <string>Auto Guess</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <widget class="QCheckBox" name="autoTransferCheck">
+      <property name="toolTip">
+       <string>Automatically transfer fit parameters to guess parameters when changing images.</string>
+      </property>
+      <property name="text">
+       <string>Auto Transfer</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QComboBox" name="imageTypeCombo">
+      <property name="toolTip">
+       <string>Select the type of data to display on the Image viewer and the graphs</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>Data</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Fit</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Guess</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Data-Fit</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Guess-Fit</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QPushButton" name="fitToGuessButton">
+      <property name="toolTip">
+       <string>Copy the fitted paramters back to the guess parameters. Useful when using fitted parameters of one image as the guess parameters for another</string>
+      </property>
+      <property name="text">
+       <string>Fit-&gt;Guess</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="guessButton">
+      <property name="toolTip">
+       <string>Turn on some smarts and guess the initial parameters given to the least squares fit function</string>
+      </property>
+      <property name="text">
+       <string>Guess</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QCheckBox" name="autoFitCheck">
+      <property name="toolTip">
+       <string>Check this if you want to automatically fit whenever the image changes</string>
+      </property>
+      <property name="text">
+       <string>Auto Fit</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QComboBox" name="fitTypeCombo">
+      <property name="toolTip">
+       <string>Select fitting function</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QPushButton" name="continueButton">
+      <property name="toolTip">
+       <string>Continue the fitting subroutine</string>
+      </property>
+      <property name="text">
+       <string>Continue</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QPushButton" name="fitButton">
+      <property name="toolTip">
+       <string>Run least squares fitting.</string>
+      </property>
+      <property name="text">
+       <string>Fit</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QSpinBox" name="nIterationsBox">
+      <property name="toolTip">
+       <string>Nuber of iterations for least squares fitting</string>
+      </property>
+      <property name="maximum">
+       <number>1000</number>
+      </property>
+      <property name="value">
+       <number>100</number>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <widget class="QCheckBox" name="useROICheck">
+      <property name="toolTip">
+       <string>Use only the Integrated ROI for fitting</string>
+      </property>
+      <property name="text">
+       <string>UseRoi</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QCheckBox" name="doubleFitCheck">
+      <property name="text">
+       <string>Double Fit</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLabel" name="fitDetailsLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>490</y>
+     <width>301</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Fit Details</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="gridLayoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>170</y>
+     <width>301</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="parmGrid">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Parameter</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Guess</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Fit</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>guessButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Fitter</receiver>
+   <slot>handleGuessClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>28</x>
+     <y>63</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>3</x>
+     <y>71</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fitButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Fitter</receiver>
+   <slot>handleFitClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>164</x>
+     <y>67</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>115</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fitToGuessButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Fitter</receiver>
+   <slot>handleFitToGuessClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>161</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>continueButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Fitter</receiver>
+   <slot>handleContinueClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>268</x>
+     <y>38</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>193</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fitTypeCombo</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>Fitter</receiver>
+   <slot>handleFitTypeChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>78</x>
+     <y>34</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-2</x>
+     <y>26</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>imageTypeCombo</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>Fitter</receiver>
+   <slot>handleImageTypeChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>187</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>handleGuessClicked()</slot>
+  <slot>handleFitClicked()</slot>
+  <slot>handleContinueClicked()</slot>
+  <slot>handleFitToGuessClicked()</slot>
+  <slot>handleFitTypeChanged()</slot>
+  <slot>handleImageTypeChanged()</slot>
+  <slot>handleDoubleFitClicked()</slot>
+ </slots>
+</ui>

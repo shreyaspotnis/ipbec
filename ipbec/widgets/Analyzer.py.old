@@ -27,7 +27,6 @@ class Analyzer(QWidget):
         self.has_roi_h = False
         self.has_roi_v = False
         self.has_roi_int = False
-        self.has_roi_err = False
         self.has_fitted_stuff = False
 
     def initUI(self):
@@ -108,11 +107,6 @@ class Analyzer(QWidget):
     def handleROIIntChanged(self, new_roi):
         self.has_roi_int = True
         self.roi_int = new_roi
-        self.updateOutputValues()
-
-    def handleROIErrChanged(self, new_roi):
-        self.has_roi_err = True
-        self.roi_err = new_roi
         self.updateOutputValues()
 
     def updateOutputValues(self):
@@ -234,11 +228,10 @@ class Analyzer(QWidget):
             #           'Y Width 1', 'Height 2', 'X Center 2', 'Y Center 2',
             #           'X Width 2', 'Y Width 2', 'Offset']
             (h1, xc1, yc1, xw1, yw1, h2, xc2, yc2, xw2, yw2, offset) = fit_parms
-            OD_i = h1*(2.0*pi*xw1*yw1)
+            OD_i = h1*(2.0*pi*xw1*yw1) + h2*(2.0*pi*xw2*yw2)
             T_H = 0
             T_V = 0
             bec_fraction = 0.0
-            mu = h2*(2.0*pi*xw2*yw2)*OD_to_atom_number # not chemical potential, using it to save N2
 
 
         # do your calculations here

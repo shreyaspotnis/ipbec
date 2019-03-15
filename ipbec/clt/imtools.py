@@ -24,8 +24,14 @@ def readImageFile(path):
         else:
             # this works in windows
             im = Image.open(path)
-            im_array = np.array(im.getdata()) - 2 ** 15
-            im_re = np.reshape(im_array, (255, 256)).T
+            # im_array = np.array(im.getdata()) - 2 ** 15
+            # im_re = np.reshape(im_array, (255, 256)).T
+            im_array = np.array(im.getdata())
+            im_re = np.reshape(im_array, (512, 512)).T
+            # im_re = np.reshape(im_array, (50, 300)).T        #Playing with ROI and camera binning
+            im_re = im_re[::-1]
+            im_re = im_re[:,::-1]
+            im_re = im_re[70:460, 70:350]
             return np.array(im_re, dtype=float)
 
 
